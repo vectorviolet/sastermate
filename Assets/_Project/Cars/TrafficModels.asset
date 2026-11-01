@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85cc22ea48f5cb041a2fe2c0b9fe063b, type: 3}
+  m_Name: TrafficModels
+  m_EditorClassIdentifier: Assembly-CSharp::FactorySabotage.Gameplay.Traffic.TrafficModelCatalog
+  models:
+  - {fileID: 919132149155446097, guid: f33c75bbd7e9ab948a310f03b67073e2, type: 3}
+  - {fileID: 919132149155446097, guid: 7307330e52bfb584c8455dfad5c57712, type: 3}
+  - {fileID: 919132149155446097, guid: 6b4f010d8b58c8f45958224fd7b2e6fa, type: 3}
+  - {fileID: 919132149155446097, guid: 856efbedda3efbd41b7e3908b1b5b698, type: 3}
+  - {fileID: 919132149155446097, guid: de0a78afd8afc054f9ba7f4520e8113a, type: 3}
+  - {fileID: 919132149155446097, guid: 0385d0c803979ca47a032e944bf93964, type: 3}
+  - {fileID: 919132149155446097, guid: ccfccd164ed86284f850a71fe463eba2, type: 3}
+  - {fileID: 919132149155446097, guid: 6dc15b424279aaa4d97b5439a895f269, type: 3}
+  - {fileID: 919132149155446097, guid: ddb431ff29106a84e9a495f1d0d3df25, type: 3}
+  - {fileID: 919132149155446097, guid: a5f933f025f9f2e4dbe68eb8ab6cdb1a, type: 3}
+  - {fileID: 919132149155446097, guid: 3a2bbdc0e4d64bd4cb1bb5bc62a4c7ac, type: 3}
+  - {fileID: 919132149155446097, guid: 0b67d1578bf0f7448af01eb7d24db4ee, type: 3}
+  - {fileID: 919132149155446097, guid: a05dd522d0c7660489e44c84216f1970, type: 3}
+  - {fileID: 919132149155446097, guid: 285f1e072becb7544a5b2303fe76dd7e, type: 3}
+  - {fileID: 919132149155446097, guid: 5899357a6c355c04bbde4f9dcd8e57ca, type: 3}
+  - {fileID: 919132149155446097, guid: 2c9e4baba0b66114bb61cedaadfb1876, type: 3}
+  - {fileID: 919132149155446097, guid: 14cbecbffb3fe474f9f317dff4fc514c, type: 3}
+  - {fileID: 919132149155446097, guid: 8ced2970d2d29094f9319340191da453, type: 3}
+  - {fileID: 919132149155446097, guid: fe4419a21b124ba4e8174765ea19c57e, type: 3}
+  - {fileID: 919132149155446097, guid: fa7ab3575197af546a906110be99fb54, type: 3}
+  - {fileID: 919132149155446097, guid: 6d81520c40d4a5644b615f78c324fc8e, type: 3}
+  - {fileID: 919132149155446097, guid: 0f3fc207fb69af14d95afeee47f8064b, type: 3}
+  - {fileID: 919132149155446097, guid: 4d11d51fa9308e447800f9c8ba2bf39e, type: 3}
+  - {fileID: 919132149155446097, guid: 35b280c601108b24fb89eb6950fd23ad, type: 3}
+  - {fileID: 919132149155446097, guid: 210c7fd02e39d5c4c9a82a5d6f3a36de, type: 3}
+  modelScale: {x: 1, y: 1, z: 1}
+  modelRotation: {x: 0, y: 0, z: 0}
+  centerAndGround: 0

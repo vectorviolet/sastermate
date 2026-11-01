@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.0599136">
+  <test-suite type="TestSuite" id="1000" name="game-up-game-jam" fullname="game-up-game-jam" runstate="Runnable" testcasecount="160" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.059914" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1025" name="VectorViolet.ProCameraManager.Validation.EditMode.dll" fullname="C:/Users/user/Desktop/projects/game/unity/game-up-game-jam/Library/ScriptAssemblies/VectorViolet.ProCameraManager.Validation.EditMode.dll" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.050360" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="87172" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1026" name="VectorViolet" fullname="VectorViolet" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.050142" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1027" name="ProCameraManager" fullname="VectorViolet.ProCameraManager" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.050089" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1028" name="Tests" fullname="VectorViolet.ProCameraManager.Tests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.050034" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1029" name="EditMode" fullname="VectorViolet.ProCameraManager.Tests.EditMode" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.049943" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1010" name="ThirdPersonLookCandidateTests" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.049247" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-suite type="ParameterizedMethod" id="1021" name="AncestorController_OnlyOwnsChildAxesWhenScanningRecursively" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.AncestorController_OnlyOwnsChildAxesWhenScanningRecursively" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.032249" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1019" name="AncestorController_OnlyOwnsChildAxesWhenScanningRecursively(True,0.0f,0.0f)" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.AncestorController_OnlyOwnsChildAxesWhenScanningRecursively(True,0.0f,0.0f)" methodname="AncestorController_OnlyOwnsChildAxesWhenScanningRecursively" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="343606397" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.025922" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1020" name="AncestorController_OnlyOwnsChildAxesWhenScanningRecursively(False,2.0f,-3.0f)" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.AncestorController_OnlyOwnsChildAxesWhenScanningRecursively(False,2.0f,-3.0f)" methodname="AncestorController_OnlyOwnsChildAxesWhenScanningRecursively" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="1422256838" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000599" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-case id="1012" name="CinemachineWithZeroGain_DoesNotReceiveAdditionalEventRotation" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.CinemachineWithZeroGain_DoesNotReceiveAdditionalEventRotation" methodname="CinemachineWithZeroGain_DoesNotReceiveAdditionalEventRotation" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="281741961" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000841" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1014" name="DisabledAxisEntries_DoNotReactivateEventFallback" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.DisabledAxisEntries_DoNotReactivateEventFallback" methodname="DisabledAxisEntries_DoNotReactivateEventFallback" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="1048933411" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000670" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1013" name="DisabledController_DoesNotReactivateEventFallback" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.DisabledController_DoesNotReactivateEventFallback" methodname="DisabledController_DoesNotReactivateEventFallback" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="179043652" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000622" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1023" name="DisablingAndReenablingLook_DiscardsOldInput" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.DisablingAndReenablingLook_DiscardsOldInput" methodname="DisablingAndReenablingLook_DiscardsOldInput" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="1487509989" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000448" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1018" name="EntriesForAnotherOwner_DoNotSuppressLookEvents" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.EntriesForAnotherOwner_DoNotSuppressLookEvents" methodname="EntriesForAnotherOwner_DoNotSuppressLookEvents" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="1561205374" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000545" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1015" name="HorizontalOwnedByCinemachine_VerticalStillUsesEvents" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.HorizontalOwnedByCinemachine_VerticalStillUsesEvents" methodname="HorizontalOwnedByCinemachine_VerticalStillUsesEvents" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="1988599059" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000456" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1011" name="NoController_PreservesEventInputFallback" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.NoController_PreservesEventInputFallback" methodname="NoController_PreservesEventInputFallback" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="1107478847" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000256" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1017" name="OrbitScaleController_DoesNotSuppressLookEvents" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.OrbitScaleController_DoesNotSuppressLookEvents" methodname="OrbitScaleController_DoesNotSuppressLookEvents" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="533441901" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000426" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1024" name="ReassigningCamera_DiscardsOldInput" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.ReassigningCamera_DiscardsOldInput" methodname="ReassigningCamera_DiscardsOldInput" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="704321510" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000358" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1022" name="RemovingController_DoesNotReplayDelegatedInput" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.RemovingController_DoesNotReplayDelegatedInput" methodname="RemovingController_DoesNotReplayDelegatedInput" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="1916729016" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000695" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1016" name="VerticalOwnedByCinemachine_HorizontalStillUsesEvents" fullname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests.VerticalOwnedByCinemachine_HorizontalStillUsesEvents" methodname="VerticalOwnedByCinemachine_HorizontalStillUsesEvents" classname="VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookCandidateTests" runstate="Runnable" seed="222477964" result="Passed" start-time="2026-10-31 10:15:10Z" end-time="2026-10-31 10:15:10Z" duration="0.000589" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/user/AppData/LocalLow/DefaultCompany/game-up-game-jam\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

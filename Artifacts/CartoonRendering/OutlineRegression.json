@@ -1,0 +1,215 @@
+{
+  "shader": "Assets/_Project/Shaders/ScreenSpaceOutline.shader",
+  "widths": [
+    1,
+    3
+  ],
+  "depthThreshold": 0.02,
+  "normalThreshold": 0.2,
+  "before": {
+    "results": [
+      {
+        "scenario": "ortho flat slope",
+        "width": 1,
+        "blackPixels": 3136,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "ortho flat slope",
+        "width": 3,
+        "blackPixels": 3136,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "perspective flat slope",
+        "width": 1,
+        "blackPixels": 3136,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "perspective flat slope",
+        "width": 3,
+        "blackPixels": 3136,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "missing normals",
+        "width": 1,
+        "blackPixels": 3136,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "missing normals",
+        "width": 3,
+        "blackPixels": 3136,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "depth step",
+        "width": 1,
+        "blackPixels": 56,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "depth step",
+        "width": 3,
+        "blackPixels": 168,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "normal crease",
+        "width": 1,
+        "blackPixels": 56,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "normal crease",
+        "width": 3,
+        "blackPixels": 168,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "silhouette",
+        "width": 1,
+        "blackPixels": 56,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "silhouette",
+        "width": 3,
+        "blackPixels": 168,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "far D24 plane",
+        "width": 1,
+        "blackPixels": 2128,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "far D24 plane",
+        "width": 3,
+        "blackPixels": 2072,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      }
+    ],
+    "errors": []
+  },
+  "after": {
+    "results": [
+      {
+        "scenario": "ortho flat slope",
+        "width": 1,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "ortho flat slope",
+        "width": 3,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "perspective flat slope",
+        "width": 1,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "perspective flat slope",
+        "width": 3,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "missing normals",
+        "width": 1,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "missing normals",
+        "width": 3,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "depth step",
+        "width": 1,
+        "blackPixels": 56,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "depth step",
+        "width": 3,
+        "blackPixels": 168,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "normal crease",
+        "width": 1,
+        "blackPixels": 56,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "normal crease",
+        "width": 3,
+        "blackPixels": 168,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "silhouette",
+        "width": 1,
+        "blackPixels": 56,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "silhouette",
+        "width": 3,
+        "blackPixels": 168,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "far D24 plane",
+        "width": 1,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      },
+      {
+        "scenario": "far D24 plane",
+        "width": 3,
+        "blackPixels": 0,
+        "testPixels": 3136,
+        "pinkPixels": 0
+      }
+    ],
+    "errors": []
+  }
+}

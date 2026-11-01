@@ -1,0 +1,521 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 78e92ca..31113e9 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -7,6 +7,15 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+ 
+ ## [Unreleased]
+ 
++### Fixed
++
++- `ThirdPersonLook` now leaves orbital look axes assigned to a
++  `CinemachineInputAxisController` to Cinemachine, so its Gain is not bypassed by a second
++  event-driven rotation. Ownership is per axis and includes recursive ancestor controllers;
++  disabling a controller or axis entry does not reactivate fallback input. Existing axes
++  without a controller retain event input, and stale input is cleared across handoffs,
++  camera assignment, and look activation. Added setup guidance and EditMode regression tests.
++
+ ### Changed
+ 
+ - Replaced NaughtyAttributes (`[ShowIf]`/`[HideIf]`/`[Dropdown]`/`[AllowNesting]`) with Odin
+diff --git a/ProCameraManager/README.md b/ProCameraManager/README.md
+new file mode 100644
+index 0000000..e0bdcc8
+--- /dev/null
++++ b/ProCameraManager/README.md
+@@ -0,0 +1,59 @@
++# ProCameraManager
++
++## Third-person input ownership
++
++`ThirdPersonLook` assigns and activates the third-person camera for `CameraStyleSelector`.
++It also supports existing projects that send `CameraRotateEvent` input.
++
++To use Cinemachine's Gain and acceleration/deceleration controls, add a
++`CinemachineInputAxisController` to the camera with `CinemachineOrbitalFollow`. Configure
++its **Look Orbit X** and **Look Orbit Y** entries for that orbital component. A controller
++on an ancestor can also own these axes when **Scan Recursively** is enabled.
++
++`ThirdPersonLook` leaves each assigned look axis to Cinemachine. Its own `sensitivity` and
++`scaleByDeltaTime` fields only apply to axes that have no matching controller entry.
++Existing cameras without an input controller keep using the event path. A controller for
++another camera, or only **Orbit Scale**, does not suppress the event-driven look axes.
++
++Ownership remains in effect when the controller component or a matching axis entry is
++disabled. Disabling a controller to pause input therefore does not start the event fallback.
++Remove the corresponding controller entry/component to return an axis to event input.
++Old input is cleared when the look is disabled, the camera is assigned, or an axis is
++delegated to Cinemachine.
++
++### Setup and input state
++
++1. Assign the intended `Look` action to the X/Y entries. Set Gain for sensitivity and use
++   a negative Gain for inversion.
++2. For a mouse-delta binding, enable **Cancel Delta Time**. For a stick-rate binding, leave
++   it disabled. A project that supports both devices should configure this per device in
++   its input integration rather than apply one setting blindly to both.
++3. Start with zero acceleration/deceleration when checking sensitivity, then tune smoothing.
++4. Use the same runtime input actions as gameplay, or gate the controller explicitly when
++   gameplay input is paused, blocked, or owned by another player. Inspector asset references
++   and actions created by a generated `GameControls` class can be different instances.
++   **Auto Enable Inputs** must not override the project's action-map state policy.
++5. With both look Gains at zero, mouse/stick input should not change either orbit axis.
++   Recheck pause/resume, style switching, and local-player ownership after wiring input.
++
++The package does not add or auto-enable controllers on existing prefabs: their input-action
++instances and gameplay state are owned by the consuming project. This preserves existing
++event-based consumers while allowing each project to migrate its camera input explicitly.
++
++## First-person and isometric behavior
++
++`FirstPersonLook` also turns the player's body with `Rigidbody.MoveRotation`. This is
++gameplay behavior used by facing-dependent animation and networked characters. Adding a
++camera input controller does not replace that behavior; migrate body yaw and camera tilt
++together before using both input paths on the same first-person camera.
++
++`IsometricCameraLook` implements discrete Q/E steps, smooth transitions, fixed pitch, and
++stationary-facing policy. Keep these custom rules when changing its input integration.
++An ordinary continuous input controller is not a replacement for the stepped rotation.
++
++## Regression tests
++
++Add `com.vectorviolet` to the consuming project's `testables` in `Packages/manifest.json`
++and run `VectorViolet.ProCameraManager.Tests.EditMode.ThirdPersonLookTests` in Unity's
++EditMode Test Runner. The tests cover event fallback, per-axis ownership, zero Gain,
++disabled controllers/entries, recursive ownership, unrelated axes/owners, and stale input.
+diff --git a/ProCameraManager/README.md.meta b/ProCameraManager/README.md.meta
+new file mode 100644
+index 0000000..9378e78
+--- /dev/null
++++ b/ProCameraManager/README.md.meta
+@@ -0,0 +1,7 @@
++fileFormatVersion: 2
++guid: 52af7e2c27284c8081beeb9a3c44779f
++TextScriptImporter:
++  externalObjects: {}
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 
+diff --git a/ProCameraManager/Runtime/Scripts/Look/ThirdPersonLook.cs b/ProCameraManager/Runtime/Scripts/Look/ThirdPersonLook.cs
+index 62a2b92..4409874 100644
+--- a/ProCameraManager/Runtime/Scripts/Look/ThirdPersonLook.cs
++++ b/ProCameraManager/Runtime/Scripts/Look/ThirdPersonLook.cs
+@@ -1,9 +1,14 @@
++using System.Collections.Generic;
+ using Unity.Cinemachine;
+ using UnityEngine;
+ using VectorViolet.Core.Events;
+ 
+ namespace VectorViolet.ProCameraManager.Look
+ {
++    /// <summary>
++    /// Manages the third-person camera style. A CinemachineInputAxisController configured for an
++    /// orbital axis owns that axis; CameraRotateEvent remains the fallback for unassigned axes.
++    /// </summary>
+     public class ThirdPersonLook : BaseLook
+     {
+         [Header("References")]
+@@ -13,7 +18,9 @@ namespace VectorViolet.ProCameraManager.Look
+                  "shows a warning above this field if it's empty and unmanaged.")]
+         [SerializeField] private CinemachineCamera vcam;
+ 
+-        [Header("Settings")]
++        [Header("Event Input Fallback")]
++        [Tooltip("Sensitivity for axes not assigned to a CinemachineInputAxisController. " +
++                 "For Cinemachine-driven axes, configure Gain on that controller instead.")]
+         [SerializeField] private float sensitivity = 5f;
+ 
+         [Tooltip("Leave OFF for mouse (delta is already per-frame). Turn ON only for analog-stick look, " +
+@@ -22,6 +29,19 @@ namespace VectorViolet.ProCameraManager.Look
+ 
+         private CinemachineOrbitalFollow _orbitalFollow;
+         private Vector2 _cachedLookInput;
++        private readonly List<CinemachineInputAxisController> _inputControllers = new();
++
++        protected override void OnEnable()
++        {
++            _cachedLookInput = Vector2.zero;
++            base.OnEnable();
++        }
++
++        protected override void OnDisable()
++        {
++            base.OnDisable();
++            _cachedLookInput = Vector2.zero;
++        }
+ 
+         // Lets a pre-assigned vcam (single-camera setup, no CameraStyleSelector involved) self-initialize
+         // without needing anything to call SetVcam — a project that never switches style shouldn't need
+@@ -46,6 +66,7 @@ namespace VectorViolet.ProCameraManager.Look
+         /// </summary>
+         public override void SetVcam(CinemachineCamera newVcam)
+         {
++            _cachedLookInput = Vector2.zero;
+             vcam = newVcam;
+             ResolveComponents();
+         }
+@@ -84,21 +105,60 @@ namespace VectorViolet.ProCameraManager.Look
+ 
+         private void Update()
+         {
+-            if (!_orbitalFollow || !vcam.isActiveAndEnabled || _cachedLookInput.sqrMagnitude < 0.001f) return;
+-            if (vcam && vcam.TryGetComponent<CinemachineInputAxisController>(out var controller) && controller.isActiveAndEnabled) return;
+-            
++            if (!_orbitalFollow || !vcam.isActiveAndEnabled) return;
++
++            GetCinemachineInputOwnership(out var ownsHorizontal, out var ownsVertical);
++
++            // Ownership survives disabling the component or an axis entry: that is how a project can
++            // mute input (for example while paused), and must not reactivate the event fallback.
++            // Discard delegated input so removing a controller cannot replay an old mouse delta.
++            if (ownsHorizontal) _cachedLookInput.x = 0f;
++            if (ownsVertical) _cachedLookInput.y = 0f;
++            if (_cachedLookInput.sqrMagnitude < 0.001f) return;
++
+             // Mouse delta is already per-frame, so it must NOT be scaled by Time.deltaTime.
+             var delta = _cachedLookInput * sensitivity;
+             if (scaleByDeltaTime) delta *= Time.deltaTime;
+ 
+-            _orbitalFollow.HorizontalAxis.Value += delta.x;
+-            _orbitalFollow.VerticalAxis.Value -= delta.y;
++            // Only touch axes owned by the event path, including their clamping/wrapping.
++            if (!ownsHorizontal)
++            {
++                _orbitalFollow.HorizontalAxis.Value += delta.x;
++                _orbitalFollow.HorizontalAxis.Validate();
++            }
+ 
+-            // Nothing clamps/wraps an InputAxis on its own — that's normally CinemachineInputAxisController's
+-            // job after it applies input, and we're driving the axis ourselves instead (see class doc), so we
+-            // own that step too. Without it, Range is decorative: Value can walk arbitrarily far past it.
+-            _orbitalFollow.HorizontalAxis.Validate();
+-            _orbitalFollow.VerticalAxis.Validate();
++            if (!ownsVertical)
++            {
++                _orbitalFollow.VerticalAxis.Value -= delta.y;
++                _orbitalFollow.VerticalAxis.Validate();
++            }
++        }
++
++        private void GetCinemachineInputOwnership(out bool horizontal, out bool vertical)
++        {
++            horizontal = false;
++            vertical = false;
++
++            // Cinemachine can also discover this camera's axes from a controller on an ancestor
++            // with ScanRecursively enabled. Match both Owner and Name, as Cinemachine does, so a
++            // controller for a different camera or only Orbit Scale does not steal look input.
++            for (var current = vcam.transform; current; current = current.parent)
++            {
++                current.GetComponents(_inputControllers);
++                foreach (var controller in _inputControllers)
++                {
++                    if (current != vcam.transform && !controller.ScanRecursively) continue;
++
++                    foreach (var axis in controller.Controllers)
++                    {
++                        if (axis == null || axis.Owner != _orbitalFollow) continue;
++                        if (axis.Name == "Look Orbit X") horizontal = true;
++                        if (axis.Name == "Look Orbit Y") vertical = true;
++                    }
++
++                    if (horizontal && vertical) return;
++                }
++            }
+         }
+     }
+ }
+diff --git a/ProCameraManager/Tests/EditMode/ThirdPersonLookTests.cs b/ProCameraManager/Tests/EditMode/ThirdPersonLookTests.cs
+new file mode 100644
+index 0000000..0a743cb
+--- /dev/null
++++ b/ProCameraManager/Tests/EditMode/ThirdPersonLookTests.cs
+@@ -0,0 +1,204 @@
++using System.Collections.Generic;
++using System.Reflection;
++using NUnit.Framework;
++using Unity.Cinemachine;
++using UnityEngine;
++using VectorViolet.Core.Events;
++using VectorViolet.ProCameraManager.Look;
++
++namespace VectorViolet.ProCameraManager.Tests.EditMode
++{
++    public class ThirdPersonLookTests
++    {
++        private static readonly MethodInfo Tick = typeof(ThirdPersonLook).GetMethod(
++            "Update", BindingFlags.Instance | BindingFlags.NonPublic);
++        private static readonly MethodInfo EnableInput = typeof(ThirdPersonLook).GetMethod(
++            "OnEnable", BindingFlags.Instance | BindingFlags.NonPublic);
++        private static readonly MethodInfo DisableInput = typeof(ThirdPersonLook).GetMethod(
++            "OnDisable", BindingFlags.Instance | BindingFlags.NonPublic);
++
++        private readonly List<GameObject> _objects = new();
++        private CinemachineCamera _camera;
++        private CinemachineOrbitalFollow _orbit;
++        private ThirdPersonLook _look;
++
++        [SetUp]
++        public void SetUp()
++        {
++            var cameraObject = CreateObject("Third person camera");
++            _camera = cameraObject.AddComponent<CinemachineCamera>();
++            _orbit = cameraObject.AddComponent<CinemachineOrbitalFollow>();
++            _orbit.HorizontalAxis.Value = 0f;
++            _orbit.VerticalAxis.Value = 0f;
++            _orbit.VerticalAxis.Range = new Vector2(-89f, 89f);
++
++            var lookObject = CreateObject("Player look");
++            lookObject.SetActive(false);
++            _look = lookObject.AddComponent<ThirdPersonLook>();
++            _look.SetVcam(_camera);
++            typeof(ThirdPersonLook).GetField("sensitivity", BindingFlags.Instance | BindingFlags.NonPublic)
++                .SetValue(_look, 1f);
++            lookObject.SetActive(true);
++            // This behavior does not execute in EditMode, so invoke its lifecycle explicitly.
++            EnableInput.Invoke(_look, null);
++        }
++
++        [TearDown]
++        public void TearDown()
++        {
++            if (_look) DisableInput.Invoke(_look, null);
++            for (var i = _objects.Count - 1; i >= 0; i--)
++                if (_objects[i]) Object.DestroyImmediate(_objects[i]);
++            _objects.Clear();
++        }
++
++        [Test]
++        public void NoController_PreservesEventInputFallback()
++        {
++            SendLookAndTick();
++            AssertAngles(2f, -3f);
++        }
++
++        [Test]
++        public void CinemachineWithZeroGain_DoesNotReceiveAdditionalEventRotation()
++        {
++            AddController(_camera.gameObject, _orbit, "Look Orbit X", "Look Orbit Y");
++            SendLookAndTick();
++            AssertAngles(0f, 0f);
++        }
++
++        [Test]
++        public void DisabledController_DoesNotReactivateEventFallback()
++        {
++            var controller = AddController(_camera.gameObject, _orbit, "Look Orbit X", "Look Orbit Y");
++            controller.enabled = false;
++            SendLookAndTick();
++            AssertAngles(0f, 0f);
++        }
++
++        [Test]
++        public void DisabledAxisEntries_DoNotReactivateEventFallback()
++        {
++            var controller = AddController(_camera.gameObject, _orbit, "Look Orbit X", "Look Orbit Y");
++            foreach (var axis in controller.Controllers) axis.Enabled = false;
++            SendLookAndTick();
++            AssertAngles(0f, 0f);
++        }
++
++        [Test]
++        public void HorizontalOwnedByCinemachine_VerticalStillUsesEvents()
++        {
++            AddController(_camera.gameObject, _orbit, "Look Orbit X");
++            SendLookAndTick();
++            AssertAngles(0f, -3f);
++        }
++
++        [Test]
++        public void VerticalOwnedByCinemachine_HorizontalStillUsesEvents()
++        {
++            AddController(_camera.gameObject, _orbit, "Look Orbit Y");
++            SendLookAndTick();
++            AssertAngles(2f, 0f);
++        }
++
++        [Test]
++        public void OrbitScaleController_DoesNotSuppressLookEvents()
++        {
++            AddController(_camera.gameObject, _orbit, "Orbit Scale");
++            SendLookAndTick();
++            AssertAngles(2f, -3f);
++        }
++
++        [Test]
++        public void EntriesForAnotherOwner_DoNotSuppressLookEvents()
++        {
++            var otherObject = CreateObject("Other camera");
++            otherObject.AddComponent<CinemachineCamera>();
++            var otherOrbit = otherObject.AddComponent<CinemachineOrbitalFollow>();
++            AddController(_camera.gameObject, otherOrbit, "Look Orbit X", "Look Orbit Y");
++            SendLookAndTick();
++            AssertAngles(2f, -3f);
++        }
++
++        [TestCase(true, 0f, 0f)]
++        [TestCase(false, 2f, -3f)]
++        public void AncestorController_OnlyOwnsChildAxesWhenScanningRecursively(
++            bool recursive, float horizontal, float vertical)
++        {
++            var parent = CreateObject("Camera rig");
++            _camera.transform.SetParent(parent.transform);
++            var controller = AddController(parent, _orbit, "Look Orbit X", "Look Orbit Y");
++            controller.ScanRecursively = recursive;
++            SendLookAndTick();
++            AssertAngles(horizontal, vertical);
++        }
++
++        [Test]
++        public void RemovingController_DoesNotReplayDelegatedInput()
++        {
++            var controller = AddController(_camera.gameObject, _orbit, "Look Orbit X", "Look Orbit Y");
++            SendLookAndTick();
++            Object.DestroyImmediate(controller);
++            Tick.Invoke(_look, null);
++            AssertAngles(0f, 0f);
++
++            SendLookAndTick();
++            AssertAngles(2f, -3f);
++        }
++
++        [Test]
++        public void DisablingAndReenablingLook_DiscardsOldInput()
++        {
++            EventBus<CameraRotateEvent>.Raise(new CameraRotateEvent(new Vector2(2f, 3f)));
++            _look.enabled = false;
++            DisableInput.Invoke(_look, null);
++            _look.enabled = true;
++            EnableInput.Invoke(_look, null);
++            Tick.Invoke(_look, null);
++            AssertAngles(0f, 0f);
++        }
++
++        [Test]
++        public void ReassigningCamera_DiscardsOldInput()
++        {
++            EventBus<CameraRotateEvent>.Raise(new CameraRotateEvent(new Vector2(2f, 3f)));
++            _look.SetVcam(_camera);
++            Tick.Invoke(_look, null);
++            AssertAngles(0f, 0f);
++        }
++
++        private GameObject CreateObject(string name)
++        {
++            var instance = new GameObject(name);
++            _objects.Add(instance);
++            return instance;
++        }
++
++        private static CinemachineInputAxisController AddController(
++            GameObject target, CinemachineOrbitalFollow owner, params string[] axes)
++        {
++            var controller = target.AddComponent<CinemachineInputAxisController>();
++            controller.Controllers.Clear();
++            foreach (var axis in axes)
++                controller.Controllers.Add(new InputAxisControllerBase<CinemachineInputAxisController.Reader>.Controller
++                {
++                    Owner = owner,
++                    Name = axis,
++                    Input = new CinemachineInputAxisController.Reader { Gain = 0f }
++                });
++            return controller;
++        }
++
++        private void SendLookAndTick()
++        {
++            EventBus<CameraRotateEvent>.Raise(new CameraRotateEvent(new Vector2(2f, 3f)));
++            Tick.Invoke(_look, null);
++        }
++
++        private void AssertAngles(float horizontal, float vertical)
++        {
++            Assert.That(_orbit.HorizontalAxis.Value, Is.EqualTo(horizontal).Within(0.0001f));
++            Assert.That(_orbit.VerticalAxis.Value, Is.EqualTo(vertical).Within(0.0001f));
++        }
++    }
++}
+diff --git a/ProCameraManager/Tests/EditMode/ThirdPersonLookTests.cs.meta b/ProCameraManager/Tests/EditMode/ThirdPersonLookTests.cs.meta
+new file mode 100644
+index 0000000..1e55c41
+--- /dev/null
++++ b/ProCameraManager/Tests/EditMode/ThirdPersonLookTests.cs.meta
+@@ -0,0 +1,11 @@
++fileFormatVersion: 2
++guid: dbe165b35f0c4b63a46e28eea08b5c3c
++MonoImporter:
++  externalObjects: {}
++  serializedVersion: 2
++  defaultReferences: []
++  executionOrder: 0
++  icon: {instanceID: 0}
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 
+diff --git a/ProCameraManager/Tests/EditMode/VectorViolet.ProCameraManager.Tests.EditMode.asmdef b/ProCameraManager/Tests/EditMode/VectorViolet.ProCameraManager.Tests.EditMode.asmdef
+new file mode 100644
+index 0000000..10811fe
+--- /dev/null
++++ b/ProCameraManager/Tests/EditMode/VectorViolet.ProCameraManager.Tests.EditMode.asmdef
+@@ -0,0 +1,20 @@
++{
++    "name": "VectorViolet.ProCameraManager.Tests.EditMode",
++    "rootNamespace": "",
++    "references": [
++        "UnityEngine.TestRunner",
++        "UnityEditor.TestRunner",
++        "Unity.Cinemachine",
++        "VectorViolet.Core",
++        "VectorViolet.ProCameraManager"
++    ],
++    "includePlatforms": ["Editor"],
++    "excludePlatforms": [],
++    "allowUnsafeCode": false,
++    "overrideReferences": true,
++    "precompiledReferences": ["nunit.framework.dll"],
++    "autoReferenced": false,
++    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
++    "versionDefines": [],
++    "noEngineReferences": false
++}
+diff --git a/ProCameraManager/Tests/EditMode/VectorViolet.ProCameraManager.Tests.EditMode.asmdef.meta b/ProCameraManager/Tests/EditMode/VectorViolet.ProCameraManager.Tests.EditMode.asmdef.meta
+new file mode 100644
+index 0000000..b5bcf4f
+--- /dev/null
++++ b/ProCameraManager/Tests/EditMode/VectorViolet.ProCameraManager.Tests.EditMode.asmdef.meta
+@@ -0,0 +1,7 @@
++fileFormatVersion: 2
++guid: 639b060232304c909b3ba41f87610c3b
++AssemblyDefinitionImporter:
++  externalObjects: {}
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 
+diff --git a/ProCameraManager/Tests/EditMode.meta b/ProCameraManager/Tests/EditMode.meta
+new file mode 100644
+index 0000000..16f2810
+--- /dev/null
++++ b/ProCameraManager/Tests/EditMode.meta
+@@ -0,0 +1,8 @@
++fileFormatVersion: 2
++guid: d7d27f145d944b5fb88a79a10b4cdfb6
++folderAsset: yes
++DefaultImporter:
++  externalObjects: {}
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 
+diff --git a/ProCameraManager/Tests.meta b/ProCameraManager/Tests.meta
+new file mode 100644
+index 0000000..1d86197
+--- /dev/null
++++ b/ProCameraManager/Tests.meta
+@@ -0,0 +1,8 @@
++fileFormatVersion: 2
++guid: 4cd3361ed4ab4c749c3c7472fdd7affe
++folderAsset: yes
++DefaultImporter:
++  externalObjects: {}
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 
