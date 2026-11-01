@@ -1,0 +1,19 @@
+{
+  "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/fredoka/Fredoka%5Bwdth,wght%5D.ttf",
+  "license": "https://raw.githubusercontent.com/google/fonts/main/ofl/fredoka/OFL.txt",
+  "source_sha256": "2ba02e68b152868aef9ba28e24b3648c7d457fe6f25c761f2c2c53fb61a73fc8",
+  "instances": [
+    {
+      "file": "Assets\\_Project\\UI\\Fonts\\Fredoka\\Fredoka-Regular.ttf",
+      "weight": 400,
+      "sha256": "169e36c73efb2372e66edcbbbfe5503afe887faedb728fd55460c9c6b68528da",
+      "turkish_and_hud_glyphs": true
+    },
+    {
+      "file": "Assets\\_Project\\UI\\Fonts\\Fredoka\\Fredoka-SemiBold.ttf",
+      "weight": 600,
+      "sha256": "e843149ab8e7fedc1fb8e5f79b1c685f2170d6a18f1675e0fa9098eac5995415",
+      "turkish_and_hud_glyphs": true
+    }
+  ]
+}

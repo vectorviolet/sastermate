@@ -42,6 +42,12 @@ namespace UnityEngine
         public SceneManagement.Scene scene = SceneManagement.SceneManager.ActiveScene;
         public GameObject() { transform = new Transform(this); }
         public void SetActive(bool value) => activeSelf = value;
+        public T AddComponent<T>() where T : MonoBehaviour, new()
+        {
+            var component = new T { gameObject = this };
+            Components[typeof(T)] = component;
+            return component;
+        }
     }
     public class Transform : Object
     {
@@ -69,10 +75,14 @@ namespace UnityEngine
     public static class Mathf
     {
         public static int Max(int a, int b) => Math.Max(a, b);
+        public static int Clamp(int value, int min, int max) => Math.Min(max, Math.Max(min, value));
         public static float Max(float a, float b) => Math.Max(a, b);
         public static float Min(float a, float b) => Math.Min(a, b);
         public static float Clamp(float value, float min, float max) => Math.Min(max, Math.Max(min, value));
         public static float Clamp01(float value) => Clamp(value, 0, 1);
+        public static float Lerp(float a, float b, float t) => a + (b - a) * Clamp01(t);
+        public static int CeilToInt(float value) => (int)Math.Ceiling(value);
+        public static int FloorToInt(float value) => (int)Math.Floor(value);
     }
     public static class Time { public static float deltaTime = 1, timeScale = 1; }
     public static class Debug
@@ -177,6 +187,11 @@ namespace VectorViolet.ProAppState
         public void SetState(TState state) { CurrentState = state; StateChanged?.Invoke(state); }
         public static bool IsInState(TState state) => Instance && EqualityComparer<TState>.Default.Equals(Instance.CurrentState, state);
     }
+}
+namespace VectorViolet.ProPanelManager
+{
+    public interface IPanelService { bool IsVisible(string panelId); }
+    public static class PanelService { public static IPanelService Current; }
 }
 namespace Sastermate.Core.App
 {

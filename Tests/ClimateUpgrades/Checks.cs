@@ -4,15 +4,22 @@ using Sastermate.Core.App;
 using Sastermate.Core.Events;
 using Sastermate.Gameplay.Climate;
 using Sastermate.Gameplay.Tasks;
+using Sastermate.Gameplay.Fire;
 using Sastermate.UI;
 using Sastermate.Input;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using VectorViolet.ProPanelManager;
 
 internal static class Checks
 {
+    private sealed class PanelProbe : IPanelService
+    {
+        public bool UpgradeVisible;
+        public bool IsVisible(string id) => id == "UpgradePanel" && UpgradeVisible;
+    }
     private static int _checks;
     private static void Check(bool value, string message)
     { if (!value) throw new Exception(message); _checks++; Console.WriteLine("PASS " + message); }
@@ -24,6 +31,7 @@ internal static class Checks
     private static GameManager Reset(GameState state = GameState.Gameplay)
     {
         UnityEngine.Object.All.Clear();
+        PanelService.Current = null;
         foreach (var group in new[] { typeof(EventBus.Game), typeof(EventBus.Tooltip) })
             foreach (var field in group.GetFields(BindingFlags.Static | BindingFlags.NonPublic))
                 if (typeof(Delegate).IsAssignableFrom(field.FieldType)) field.SetValue(null, null);
@@ -36,11 +44,13 @@ internal static class Checks
         Call(game, "Awake"); Call(game, "OnEnable"); game.SetState(state);
         return game;
     }
-    private static (ClimateManager climate, TaskRewardManager wallet, EcoUpgradeManager shop) Setup(int cp = 1000)
+    private static (ClimateManager climate, TaskRewardManager wallet, EcoUpgradeManager shop) Setup(int cp = 1000,
+        float survivalDuration = 180f, bool survivalGoal = true)
     {
         var wallet = new TaskRewardManager(); Set(wallet, "startingCarbonPoints", cp); Call(wallet, "Awake"); Call(wallet, "OnEnable");
         var climate = new ClimateManager { currentTemperature = 1f, activeFiresCount = 3 };
         Set(climate, "rewards", wallet); Set(climate, "trackSceneFires", false);
+        Set(climate, "survivalDuration", survivalDuration); Set(climate, "enableSurvivalGoal", survivalGoal);
         Call(climate, "Awake"); Call(climate, "OnEnable");
         var shop = new EcoUpgradeManager(); Set(shop, "climate", climate); Call(shop, "Awake"); Call(shop, "OnEnable");
         return (climate, wallet, shop);
@@ -202,6 +212,50 @@ internal static class Checks
         Check(GameManager.HasLost && !GameManager.HasWon, "The first loss cannot be overwritten by a later victory");
         game = Reset(GameState.MainMenu); game.WinGame(); game.LoseGame();
         Check(game.CurrentState == GameState.MainMenu, "MainMenu cannot accidentally finish an inactive game");
+        game.ResumeGame();
+        Check(game.CurrentState == GameState.MainMenu, "Resume cannot leave the main menu");
+        game = Reset(GameState.Paused); bool controlsEnabled = false; var resumeNotifications = 0;
+        game.StateChanged += state => { controlsEnabled = state == GameState.Gameplay; resumeNotifications++; };
+        game.ResumeGame();
+        Check(controlsEnabled && GameManager.IsGameplay, "Resume returns a paused run to Gameplay for its input listeners");
+        game.ResumeGame();
+        Check(resumeNotifications == 2, "Resume reconciles input listeners even when the state is already Gameplay");
+        PanelService.Current = new PanelProbe { UpgradeVisible = true }; Call(game, "HandlePausePressed");
+        Check(GameManager.IsGameplay && resumeNotifications == 3, "Escape on an open upgrade panel uses the same Gameplay resume path");
+        PanelService.Current = null; Call(game, "HandlePausePressed");
+        Check(game.CurrentState == GameState.Paused, "Escape without an upgrade panel retains normal pause behavior");
+        Call(game, "HandleBackPressed");
+        Check(GameManager.IsGameplay, "Back uses the shared resume path");
+        game.WinGame(); game.ResumeGame();
+        Check(GameManager.HasWon, "Closing a panel cannot resume a completed run");
+
+        game = Reset(GameState.MainMenu); run = Setup(); run.climate.activeFiresCount = 0;
+        Time.deltaTime = 60f; Call(run.climate, "Update");
+        Check(Near(run.climate.SecondsRemaining, 180f), "Survival timer does not count down in the main menu");
+        game.StartGame(); Call(run.climate, "Update");
+        Check(Near(run.climate.SecondsRemaining, 120f) && Near(run.climate.ElapsedGameplayTime, 60f),
+            "The shared VectorViolet countdown advances once per gameplay update");
+        game.SetState(GameState.Paused); Call(run.climate, "Update");
+        Check(Near(run.climate.SecondsRemaining, 120f), "Pausing freezes the survival countdown");
+        game.SetState(GameState.Gameplay); Time.deltaTime = 119f; Call(run.climate, "Update");
+        Check(!GameManager.IsGameOver && Near(run.climate.SecondsRemaining, 1f), "Survival cannot win before the deadline");
+        Time.deltaTime = 1f; Call(run.climate, "Update");
+        Check(GameManager.HasWon && Near(run.climate.SecondsRemaining, 0f), "Surviving three gameplay minutes triggers victory");
+        game = Reset(); run = Setup(1000, 1f); run.climate.currentTemperature = 1.99f;
+        Time.deltaTime = 1f; Call(run.climate, "Update");
+        Check(GameManager.HasLost, "Temperature loss wins a tie with the survival deadline");
+        game = Reset(); run = Setup(1000, 1f, false); run.climate.activeFiresCount = 0;
+        Time.deltaTime = 10f; Call(run.climate, "Update");
+        Check(GameManager.IsGameplay, "The automatic survival goal can be disabled for a custom objective");
+        Check(FireSpawnSchedule.FireLimit(1, 3, FireSpawnSchedule.NormalProgress(59.9f, 60f, 30f, true)) == 1,
+            "The first minute is limited to one active fire");
+        Check(FireSpawnSchedule.FireLimit(1, 3, FireSpawnSchedule.NormalProgress(75f, 60f, 30f, true)) == 2,
+            "Difficulty introduces a second fire during the ramp");
+        Check(FireSpawnSchedule.FireLimit(1, 3, FireSpawnSchedule.NormalProgress(90f, 60f, 30f, true)) == 3,
+            "Normal fire capacity is reached after the warmup and ramp");
+        Check(FireSpawnSchedule.FireLimit(1, 3, FireSpawnSchedule.NormalProgress(0f, 60f, 30f, false)) == 3,
+            "Disabling warmup immediately uses normal difficulty");
+        Check(FireSpawnSchedule.FireLimit(5, 3, 0f) == 3, "Warmup cannot exceed the configured normal fire capacity");
 
         var attack = new AttackInputGate();
         attack.QueuePress();

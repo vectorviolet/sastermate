@@ -88,6 +88,7 @@ namespace Sastermate.UI
         {
             RegisterPanels();
             _service?.Hide(panelId);
+            if (panelId == "UpgradePanel" && GameManager.Instance) GameManager.Instance.ResumeGame();
         }
 
         public void ShowExclusivePanel(string panelId)
@@ -100,8 +101,8 @@ namespace Sastermate.UI
         {
             RegisterPanels();
             if (_service == null) return;
-            if (_service.IsVisible(panelId)) _service.Hide(panelId);
-            else _service.Show(panelId);
+            if (_service.IsVisible(panelId)) HidePanel(panelId);
+            else ShowPanel(panelId);
         }
     }
 }

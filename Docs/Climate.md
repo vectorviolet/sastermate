@@ -33,6 +33,8 @@ The climate simulation respects GameManager's Gameplay state; pausing or visitin
 
 ## Purchasable warming protection
 
+The default victory condition is now to survive 180 Gameplay seconds below +2 degrees. ClimateManager automatically adds a SurvivalTimer adapter that advances the existing VectorViolet countdown only while playing. The optional Round Timer Text shows the time remaining. Duration and Enable Survival Goal are Inspector settings; see [GameResults.md](GameResults.md). The first minute's easier fire schedule is described in [FireDifficulty.md](FireDifficulty.md).
+
 The end-screen split uses **LoseScreen** for the +2 degree GameOver state and **WinScreen** for GameWon. Climate and purchases freeze after either outcome. See [GameResults.md](GameResults.md) for current panel mappings and the WinGame/LoseGame hooks; earlier EndScreen examples below/above describe the original loss-only setup.
 
 The eco upgrade system adds solar panels, recycling centers, and planted trees that reduce the future rate of fire warming. It shares this manager's CP wallet, leaves the current temperature unchanged, and caps protection at 80% by default. See [ClimateUpgrades.md](ClimateUpgrades.md) for the prepared definitions, build sites, purchase buttons, and optional warming-rate HUD label. Replay reloads the scene to reset these upgrades along with temperature and the task wallet; wire the game-over button to `GameManager.Replay()` as described in [Panels.md](Panels.md).

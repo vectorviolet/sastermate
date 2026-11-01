@@ -1,0 +1,9 @@
+Saved scene inspection confirmed the Close/X button calls GamePanelPresenter.HidePanel("UpgradePanel"). That path only changed visibility. The keyboard Back path changed the application state to Gameplay, reconciling the input action maps. The paths now share GameManager.ResumeGame.
+
+Existing Close wiring remains valid. HidePanel("UpgradePanel") hides the UI then reconciles Gameplay; TogglePanel delegates to the same close method. Escape on an open UpgradePanel uses ResumeGame directly, avoiding an intermediate Paused state. Generic panels retain their existing behavior, and ResumeGame guards MainMenu, completed results, duplicates, and pending Replay.
+
+Unity 6000.3.27f2 gameplay assembly compilation passed with no compiler diagnostic output.
+73 headless gameplay checks passed, including paused resume, already-Gameplay input reconciliation, Escape-on-shop routing, ordinary pause behavior, Back routing, MainMenu and completed-game guards.
+24 headless panel checks passed against production panel/presenter/service classes, including the saved HidePanel close callback and TogglePanel restoring Gameplay while hiding the shop. The panel fixture's serialized-field CS0649 warning is fixture-only; Unity compilation reported no warnings.
+
+No scene wiring was changed. Native Input System control delivery still needs a Play-mode check after compilation/restart; these tests exercise state and visibility behavior with fixture adapters.

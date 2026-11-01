@@ -26,6 +26,8 @@ Buttons can call the presenter's **ShowPanel(string)**, **HidePanel(string)**, *
 
 For a button-controlled overlay such as **UpgradeScreen** (Panel Id **UpgradePanel**), keep it in the presenter's list with **Visible In States empty** and author its CanvasGroup hidden. Wire an Upgrades button in GameScreen to **Game Panel Presenter.ShowPanel("UpgradePanel")**, and a Close button inside UpgradeScreen to **HidePanel("UpgradePanel")**. It starts hidden, opens on demand, and closes on any game-state change. See [ClimateUpgrades.md](ClimateUpgrades.md) for the exact scene setup and world build sites.
 
+For UpgradePanel specifically, HidePanel and closing via TogglePanel also call GameManager.ResumeGame, matching Escape/Back's gameplay input reconciliation. Generic panels keep their visibility-only behavior. ResumeGame cannot leave MainMenu, resume a win/loss, or interrupt Replay. Escape while UpgradePanel is visible closes/resumes it directly; normal Escape pause behavior remains when it is hidden.
+
 From code, the existing shared API remains available:
 
 ```csharp

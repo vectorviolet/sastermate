@@ -52,7 +52,7 @@ namespace Sastermate.Gameplay.Climate
         private float _warmingReduction;
         private int _lastNotifiedCP = -1;
         private float _lastNotifiedReduction = -1f;
-        private float _elapsedGameplayTime;
+        private SurvivalTimer _survivalTimer;
 
         public bool IsGameOver => _gameOverTriggered || GameManager.IsGameOver;
         public int CarbonPoints => rewards ? rewards.CarbonPoints : Mathf.Max(0, currentCP);
@@ -60,8 +60,8 @@ namespace Sastermate.Gameplay.Climate
         public float MaximumWarmingReduction => maximumWarmingReduction;
         public float WarmingMultiplier => 1f - _warmingReduction;
         public float WarmingPerSecond => activeFiresCount * temperatureIncreasePerFire * WarmingMultiplier;
-        public float ElapsedGameplayTime => _elapsedGameplayTime;
-        public float SecondsRemaining => Mathf.Max(0f, survivalDuration - _elapsedGameplayTime);
+        public float ElapsedGameplayTime => _survivalTimer ? _survivalTimer.Elapsed : 0f;
+        public float SecondsRemaining => _survivalTimer ? _survivalTimer.CurrentTime : survivalDuration;
         public bool CanPurchaseUpgrades => isActiveAndEnabled && !IsGameOver &&
             currentTemperature < MaximumTemperature && (!_gameManager || GameManager.IsGameplay);
 
@@ -72,11 +72,13 @@ namespace Sastermate.Gameplay.Climate
             if (!rewards) rewards = FindFirstObjectByType<TaskRewardManager>();
             _gameManager = GameManager.Instance ? GameManager.Instance : FindFirstObjectByType<GameManager>();
             ClampState();
+            EnsureSurvivalTimer();
             ConfigureSlider();
         }
 
         private void OnEnable()
         {
+            EnsureSurvivalTimer();
             if (trackSceneFires)
             {
                 EventBus.Game.OnFireIgnited += HandleFireIgnited;
@@ -88,6 +90,13 @@ namespace Sastermate.Gameplay.Climate
                 activeFiresCount = _trackedFires.Count;
             }
             RefreshUI();
+        }
+
+        private void EnsureSurvivalTimer()
+        {
+            if (!_survivalTimer) _survivalTimer = GetComponent<SurvivalTimer>();
+            if (!_survivalTimer) _survivalTimer = gameObject.AddComponent<SurvivalTimer>();
+            if (!_survivalTimer.IsConfigured) _survivalTimer.Configure(survivalDuration);
         }
 
         private void OnDisable()
@@ -106,7 +115,7 @@ namespace Sastermate.Gameplay.Climate
             // scene without a GameManager. Time.deltaTime respects a paused timescale.
             if (!IsGameOver && (!_gameManager || GameManager.IsGameplay))
             {
-                _elapsedGameplayTime += Time.deltaTime;
+                _survivalTimer.AdvanceGameplay();
                 currentTemperature = Mathf.Clamp(currentTemperature +
                     WarmingPerSecond * Time.deltaTime,
                     0f, MaximumTemperature);
@@ -115,7 +124,7 @@ namespace Sastermate.Gameplay.Climate
             // Loss takes priority if the temperature limit and timer are reached in the same frame.
             if (!IsGameOver && currentTemperature >= MaximumTemperature) GameOver();
             else if (!IsGameOver && enableSurvivalGoal && _gameManager && GameManager.IsGameplay &&
-                     _elapsedGameplayTime >= survivalDuration) _gameManager.WinGame();
+                     SecondsRemaining <= 0f) _gameManager.WinGame();
         }
 
         public void SpendCPForEcoBuilding(int cost, float temperatureReduction)

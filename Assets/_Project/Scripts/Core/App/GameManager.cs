@@ -2,6 +2,7 @@ using Sastermate.Core.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using VectorViolet.ProAppState;
+using VectorViolet.ProPanelManager;
 using VectorViolet.ProSaveManager;
 using VectorViolet.ProSaveManager.Implementations;
 
@@ -26,6 +27,7 @@ namespace Sastermate.Core.App
         public static bool HasWon => IsInState(GameState.GameWon);
         public static bool HasLost => IsInState(GameState.GameOver);
         public static bool IsGameOver => HasWon || HasLost;
+        public static bool IsReplaying => _replayScenePath != null;
 
         protected override void Awake()
         {
@@ -54,12 +56,18 @@ namespace Sastermate.Core.App
 
         private void HandlePausePressed()
         {
-            if (!IsGameOver && CurrentState != GameState.MainMenu) SetState(GameState.Paused);
+            if (IsGameOver || IsReplaying || CurrentState == GameState.MainMenu) return;
+            if (PanelService.Current?.IsVisible("UpgradePanel") == true) ResumeGame();
+            else SetState(GameState.Paused);
         }
 
-        private void HandleBackPressed()
+        private void HandleBackPressed() => ResumeGame();
+
+        public void ResumeGame()
         {
-            if (!IsGameOver && CurrentState != GameState.MainMenu) SetState(GameState.Gameplay);
+            if (IsDuplicate || IsGameOver || IsReplaying || CurrentState == GameState.MainMenu) return;
+            // Reconcile input listeners even when a UI-only overlay left the state as Gameplay.
+            SetState(GameState.Gameplay);
         }
 
         public void StartGame()

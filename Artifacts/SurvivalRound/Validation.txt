@@ -1,0 +1,18 @@
+Unity 6000.3.27f2 gameplay and Editor assemblies compiled successfully with no diagnostic output. Editor compilation includes Tools/Sastermate/Apply Cartoon UI Fonts.
+
+66 headless gameplay checks passed using production climate, SurvivalTimer, the shared VectorViolet.Utilities.Timer, FireSpawnSchedule, economy, outcome, Replay, button, and attack gate sources. Added checks cover gameplay-only countdown, no main-menu/pause ticking, 180-second victory, loss priority on a simultaneous temperature/timer limit, optional custom objectives, first-minute one-fire capacity, the 75/90-second ramp, disabling warmup, and keeping warmup within normal capacity.
+
+21 GameAudioPresenter playback-routing checks passed against the shared ISoundService interface. Added result checks cover matching Win/Lose SoundData, one request per result, no repeat on re-enable, guard reset for a new run, delayed service availability, stale result cancellation, scene-owned presenter behavior during Replay, and suppression of a duplicate persistent-manager prefab's old-result audio. These headless fixture compilations report serialized-field CS0649 warnings; the actual Unity gameplay/Editor compilations did not.
+
+Saved scene's original fire config was verified as initialDelay=2, ignitionInterval=8..14, maxSimultaneousFires=3. New warmup defaults require no scene edits: initial delay at least 12 seconds, first 60 Gameplay seconds at one active fire with 20..30-second ignition attempts, nearby random targets within 12 XZ units (closest fallback), then a 30-second ramp to the authored normal settings. Native spawn target selection and larger-map balance still need a playthrough.
+
+Win.asset and Lose.asset already point to win.wav and lose.wav with Loop=0, Volume=1, and SpatialBlend=0. Assign them to the new Win Sound/Lose Sound fields on the existing GameAudioPresenter manually.
+
+SurvivalTimer wraps the existing VectorViolet countdown, avoids its separate Start/Update tick, and is automatically added/configured by ClimateManager. Optional timer text still needs a TMP label assigned to Round Timer Text. Default victory: survive 180 Gameplay seconds below +2 degrees. Replay resets scene-owned state.
+
+Fredoka Regular/SemiBold static TTF sources were downloaded/generated from Google Fonts' OFL-licensed variable font. Both static files were checked for the complete Turkish/HUD character sample. Source and output hashes are in Artifacts/CartoonFonts/Source.json. The OFL text is included beside the fonts and in StreamingAssets/ThirdPartyNotices for builds.
+
+The font apply command is compiled and reviewable but has not been executed in the native Editor. It creates dynamic TMP SDF atlases and updates open scenes plus project UI prefabs when the user selects the menu. Native FontEngine generation, UI layout, visual glyph rendering, audio output, scene/UI wiring, and a full playthrough remain manual checks.
+
+Editor instructions: Docs/GameResults.md, Docs/FireDifficulty.md, Docs/Audio.md, Docs/CartoonFonts.md.
+No scene editor wiring or remote/package publishing was performed.

@@ -35,6 +35,14 @@ namespace Sastermate.Audio
 
         protected override void OnEnable()
         {
+            // A scene reload destroys the duplicate GameManager root at the end of the
+            // frame. Its presenter must not briefly replay the persistent manager's result.
+            var owner = GetComponent<GameManager>();
+            if (owner && GameManager.Instance && owner != GameManager.Instance)
+            {
+                enabled = false;
+                return;
+            }
             SceneManager.sceneLoaded += HandleSceneLoaded;
             base.OnEnable();
         }
@@ -93,7 +101,7 @@ namespace Sastermate.Audio
 
         private void TryPlayResultSound()
         {
-            if (!_pendingResult.HasValue || _resultSoundPlayed) return;
+            if (!_pendingResult.HasValue || _resultSoundPlayed || GameManager.IsReplaying) return;
             var sound = _pendingResult.Value == GameState.GameWon ? winSound : loseSound;
             if (!sound || !sound.clip) return;
             var service = SoundService.Current;
