@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FactorySabotage.Core.Utilities
+namespace Sastermate.Core.Utilities
 {
     public class HashedAnimatorParameters
     {

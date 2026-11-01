@@ -496,8 +496,8 @@ Shader "SH_Vefects_VFX_URP_Particles_Erosion_01"
 				float2 panner53 = ( windSpeed21 * _Noise01Speed + texCoord36);
 				float2 texCoord43 = IN.ase_texcoord4.xy * _Noise02Scale + float2( 0,0 );
 				float2 panner51 = ( windSpeed21 * _Noise02Speed + texCoord43);
-				float Noises85 = saturate( ( pow( ( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r ) , _NoisesPower ) * _NoisesMultiply ) );
-				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
+				float Noises85 = saturate( ( pow( max( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r, 0.0001 ) , _NoisesPower ) * _NoisesMultiply ) );
+				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( max( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r, 0.0001 ) , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( max( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r, 0.0001 ) , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
 				
 				float4 ase_screenPosNorm = ScreenPos / ScreenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
@@ -840,8 +840,8 @@ Shader "SH_Vefects_VFX_URP_Particles_Erosion_01"
 				float2 panner53 = ( windSpeed21 * _Noise01Speed + texCoord36);
 				float2 texCoord43 = IN.ase_texcoord2.xy * _Noise02Scale + float2( 0,0 );
 				float2 panner51 = ( windSpeed21 * _Noise02Speed + texCoord43);
-				float Noises85 = saturate( ( pow( ( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r ) , _NoisesPower ) * _NoisesMultiply ) );
-				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
+				float Noises85 = saturate( ( pow( max( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r, 0.0001 ) , _NoisesPower ) * _NoisesMultiply ) );
+				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( max( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r, 0.0001 ) , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( max( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r, 0.0001 ) , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
 				float4 screenPos = IN.ase_texcoord4;
 				float4 ase_screenPosNorm = screenPos / screenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
@@ -1146,8 +1146,8 @@ Shader "SH_Vefects_VFX_URP_Particles_Erosion_01"
 				float2 panner53 = ( windSpeed21 * _Noise01Speed + texCoord36);
 				float2 texCoord43 = IN.ase_texcoord3.xy * _Noise02Scale + float2( 0,0 );
 				float2 panner51 = ( windSpeed21 * _Noise02Speed + texCoord43);
-				float Noises85 = saturate( ( pow( ( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r ) , _NoisesPower ) * _NoisesMultiply ) );
-				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
+				float Noises85 = saturate( ( pow( max( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r, 0.0001 ) , _NoisesPower ) * _NoisesMultiply ) );
+				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( max( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r, 0.0001 ) , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( max( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r, 0.0001 ) , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
 				float4 ase_screenPosNorm = ScreenPos / ScreenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
 				float screenDepth95 = (unity_OrthoParams.w > 0.5 ? LinearDepthToEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy )) : LinearEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy ),_ZBufferParams));
@@ -1429,8 +1429,8 @@ Shader "SH_Vefects_VFX_URP_Particles_Erosion_01"
 				float2 panner53 = ( windSpeed21 * _Noise01Speed + texCoord36);
 				float2 texCoord43 = IN.ase_texcoord.xy * _Noise02Scale + float2( 0,0 );
 				float2 panner51 = ( windSpeed21 * _Noise02Speed + texCoord43);
-				float Noises85 = saturate( ( pow( ( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r ) , _NoisesPower ) * _NoisesMultiply ) );
-				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
+				float Noises85 = saturate( ( pow( max( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r, 0.0001 ) , _NoisesPower ) * _NoisesMultiply ) );
+				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( max( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r, 0.0001 ) , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( max( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r, 0.0001 ) , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
 				float4 screenPos = IN.ase_texcoord2;
 				float4 ase_screenPosNorm = screenPos / screenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
@@ -1716,8 +1716,8 @@ Shader "SH_Vefects_VFX_URP_Particles_Erosion_01"
 				float2 panner53 = ( windSpeed21 * _Noise01Speed + texCoord36);
 				float2 texCoord43 = IN.ase_texcoord.xy * _Noise02Scale + float2( 0,0 );
 				float2 panner51 = ( windSpeed21 * _Noise02Speed + texCoord43);
-				float Noises85 = saturate( ( pow( ( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r ) , _NoisesPower ) * _NoisesMultiply ) );
-				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
+				float Noises85 = saturate( ( pow( max( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r, 0.0001 ) , _NoisesPower ) * _NoisesMultiply ) );
+				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( max( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r, 0.0001 ) , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( max( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r, 0.0001 ) , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
 				float4 screenPos = IN.ase_texcoord2;
 				float4 ase_screenPosNorm = screenPos / screenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
@@ -2016,8 +2016,8 @@ Shader "SH_Vefects_VFX_URP_Particles_Erosion_01"
 				float2 panner53 = ( windSpeed21 * _Noise01Speed + texCoord36);
 				float2 texCoord43 = IN.ase_texcoord2.xy * _Noise02Scale + float2( 0,0 );
 				float2 panner51 = ( windSpeed21 * _Noise02Speed + texCoord43);
-				float Noises85 = saturate( ( pow( ( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r ) , _NoisesPower ) * _NoisesMultiply ) );
-				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
+				float Noises85 = saturate( ( pow( max( tex2D( _Noise_01_Texture, ( Distortion39 + panner53 ) ).r * tex2D( _Noise_02_Texture, ( Distortion39 + panner51 ) ).r, 0.0001 ) , _NoisesPower ) * _NoisesMultiply ) );
+				float temp_output_120_0 = saturate( ( saturate( ( saturate( ( pow( max( tex2D( _MaskTexture, ( ( Distortion39 * _DistortionIntensity ) + panner57 ) ).r, 0.0001 ) , _MaskPower ) * _MaskMultiply ) ) * saturate( ( pow( max( tex2D( _MaskMoveTexture, ( texCoord58 + appendResult60 ) ).r, 0.0001 ) , _MaskMovePower ) * _MaskMoveMultiply ) ) ) ) * Noises85 ) );
 				float4 ase_screenPosNorm = ScreenPos / ScreenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
 				float screenDepth95 = (unity_OrthoParams.w > 0.5 ? LinearDepthToEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy )) : LinearEyeDepth(SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy ),_ZBufferParams));

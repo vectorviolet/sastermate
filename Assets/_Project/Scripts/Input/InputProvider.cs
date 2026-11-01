@@ -1,6 +1,6 @@
 using VectorViolet.ProAppState;
 
-namespace FactorySabotage.Input
+namespace Sastermate.Input
 {
     public static class InputProvider
     {

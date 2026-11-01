@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using VectorViolet.Core.Events;
 
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
-using static FactorySabotage.Input.GameControls;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
+using static Sastermate.Input.GameControls;
 
-namespace FactorySabotage.Input.Listeners
+namespace Sastermate.Input.Listeners
 {
     /// <summary>
     ///     Dedicated listener for player inputs. Only active during Gameplay state.
@@ -15,6 +15,7 @@ namespace FactorySabotage.Input.Listeners
     public class GameplayInputAdapter : GameStateListener
     {
         private static PlayerActions Actions => InputProvider.Controls.Player;
+        private readonly AttackInputGate _attack = new();
 
         private void Update()
         {
@@ -22,6 +23,11 @@ namespace FactorySabotage.Input.Listeners
             // Keep sending while stationary so listeners enabled mid-game also receive the pointer.
             if (GameManager.IsGameplay && Pointer.current != null)
                 EventBus.Input.RaiseAimPositionChanged(Pointer.current.position.ReadValue());
+
+            var blocked = !GameManager.IsGameplay || (_attack.HasInput && GameplayUiInput.IsAttackBlocked());
+            var change = _attack.Update(blocked);
+            if (change == AttackInputChange.Pressed) EventBus.Input.RaiseAttackPressed();
+            else if (change == AttackInputChange.Released) EventBus.Input.RaiseAttackReleased();
         }
 
         protected override void OnEnable()
@@ -52,6 +58,7 @@ namespace FactorySabotage.Input.Listeners
             Actions.Look.canceled -= OnLookCanceled;
             Actions.RotateCamera.performed -= OnRotateCameraPerformed;
             Actions.Menu.performed -= OnMenuPressed;
+            _attack.Release();
             EventBus.Input.RaiseAttackReleased();
         }
 
@@ -60,11 +67,19 @@ namespace FactorySabotage.Input.Listeners
             if (newState == GameState.Gameplay)
                 Actions.Enable();
             else
+            {
                 Actions.Disable();
+                _attack.Release();
+                EventBus.Input.RaiseAttackReleased();
+            }
         }
         
-        private static void OnAttackPressed(InputAction.CallbackContext ctx)   => EventBus.Input.RaiseAttackPressed();
-        private static void OnAttackReleased(InputAction.CallbackContext ctx)  => EventBus.Input.RaiseAttackReleased();
+        private void OnAttackPressed(InputAction.CallbackContext ctx) => _attack.QueuePress();
+        private void OnAttackReleased(InputAction.CallbackContext ctx)
+        {
+            _attack.Release();
+            EventBus.Input.RaiseAttackReleased();
+        }
         private static void OnInteractPressed(InputAction.CallbackContext ctx) => EventBus.Input.RaiseInteractPressed();
         private static void OnMovePressed(InputAction.CallbackContext ctx)     => EventBus<MoveEvent>.Raise(new MoveEvent(ctx.ReadValue<Vector2>()));
         private static void OnMoveCanceled(InputAction.CallbackContext ctx)    => EventBus<MoveEvent>.Raise(new MoveEvent(Vector2.zero));

@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
-using FactorySabotage.Gameplay.Tasks;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
+using Sastermate.Gameplay.Tasks;
+using Sastermate.Player;
 using UnityEngine;
 using VectorViolet.Utilities;
 
-namespace FactorySabotage.Gameplay.Fire
+namespace Sastermate.Gameplay.Fire
 {
     [DisallowMultipleComponent]
     public sealed class RandomFireController : GameStateListener
@@ -16,6 +17,19 @@ namespace FactorySabotage.Gameplay.Fire
         [SerializeField] private Vector2 ignitionInterval = new(8f, 14f);
         [SerializeField, Range(1, 10)] private int maxSimultaneousFires = 3;
 
+        [Header("Beginner Warmup")]
+        [SerializeField] private bool enableWarmup = true;
+        [SerializeField, Min(0f)] private float warmupDuration = 60f;
+        [SerializeField, Min(0f)] private float warmupInitialDelay = 12f;
+        [SerializeField] private Vector2 warmupIgnitionInterval = new(20f, 30f);
+        [SerializeField, Range(1, 10)] private int warmupMaxFires = 1;
+        [Tooltip("Seconds after warmup to blend back to the normal fire schedule.")]
+        [SerializeField, Min(0f)] private float difficultyRampDuration = 30f;
+        [Tooltip("Prefer fires within this XZ distance of the player during warmup. Zero allows the whole map.")]
+        [SerializeField, Min(0f)] private float warmupSpawnRadius = 12f;
+        [Tooltip("Optional. Uses the player's water nozzle transform when empty.")]
+        [SerializeField] private Transform playerTarget;
+
         [Header("Task Rewards")]
         [Tooltip("Reward for fully extinguishing a fire with water. Disabling objects or clearing fires never awards points.")]
         [SerializeField] private TaskDefinition extinguishTask;
@@ -24,10 +38,14 @@ namespace FactorySabotage.Gameplay.Fire
         private readonly HashSet<BurnableObject> _targets = new();
         private ComponentPool<PooledFireEffect> _pool;
         private float _countdown;
+        private float _gameplayTime;
 
         public int ActiveFireCount => _active.Count;
         public int PooledEffectCount => _pool?.TotalCount ?? 0;
         public float SecondsUntilNextIgnition => _countdown;
+        private float NormalProgress => FireSpawnSchedule.NormalProgress(_gameplayTime, warmupDuration,
+            difficultyRampDuration, enableWarmup);
+        public int CurrentFireLimit => FireSpawnSchedule.FireLimit(warmupMaxFires, maxSimultaneousFires, NormalProgress);
 
         private void Awake()
         {
@@ -36,6 +54,11 @@ namespace FactorySabotage.Gameplay.Fire
                 Debug.LogWarning("[RandomFireController] Assign the pooled fire prefab.", this);
                 enabled = false;
                 return;
+            }
+            if (!playerTarget)
+            {
+                var water = FindFirstObjectByType<PlayerWaterSpray>();
+                if (water) playerTarget = water.transform;
             }
             if (targets != null)
                 foreach (var target in targets)
@@ -54,7 +77,8 @@ namespace FactorySabotage.Gameplay.Fire
 
         protected override void OnEnable()
         {
-            _countdown = initialDelay;
+            _gameplayTime = 0f;
+            _countdown = enableWarmup ? Mathf.Max(initialDelay, warmupInitialDelay) : initialDelay;
             EventBus.Game.OnWaterHit += HandleWaterHit;
             EventBus.Game.OnFireExtinguished += HandleFireExtinguished;
             base.OnEnable();
@@ -79,20 +103,22 @@ namespace FactorySabotage.Gameplay.Fire
         private void Update()
         {
             if (!GameManager.IsGameplay || _pool == null) return;
+            _gameplayTime += Time.deltaTime;
             foreach (var effect in _active.Values)
                 if (effect) effect.UpdateIntensity();
 
             _countdown -= Time.deltaTime;
             if (_countdown > 0f) return;
             TryIgniteRandom();
-            var minimum = Mathf.Max(0.1f, ignitionInterval.x);
-            _countdown = Random.Range(minimum, Mathf.Max(minimum, ignitionInterval.y));
+            var interval = Vector2.Lerp(warmupIgnitionInterval, ignitionInterval, NormalProgress);
+            var minimum = Mathf.Max(0.1f, interval.x);
+            _countdown = Random.Range(minimum, Mathf.Max(minimum, interval.y));
         }
 
         public bool TryIgnite(BurnableObject target)
         {
             if (!isActiveAndEnabled || !GameManager.IsGameplay || _pool == null || !target ||
-                !_targets.Contains(target) || !target.CanIgnite || _active.Count >= maxSimultaneousFires)
+                !_targets.Contains(target) || !target.CanIgnite || _active.Count >= CurrentFireLimit)
                 return false;
 
             var effect = _pool.Get();
@@ -107,9 +133,24 @@ namespace FactorySabotage.Gameplay.Fire
         {
             // Reservoir sampling chooses uniformly without creating a candidate list every spawn.
             BurnableObject chosen = null;
+            BurnableObject nearest = null;
+            var nearestDistance = float.PositiveInfinity;
             var eligible = 0;
+            var nearbyOnly = enableWarmup && _gameplayTime < warmupDuration && playerTarget && warmupSpawnRadius > 0f;
             foreach (var target in _targets)
-                if (target && target.CanIgnite && Random.Range(0, ++eligible) == 0) chosen = target;
+            {
+                if (!target || !target.CanIgnite) continue;
+                if (nearbyOnly)
+                {
+                    var delta = target.FirePosition - playerTarget.position;
+                    var distance = delta.x * delta.x + delta.z * delta.z;
+                    if (distance < nearestDistance) { nearest = target; nearestDistance = distance; }
+                    if (distance > warmupSpawnRadius * warmupSpawnRadius) continue;
+                }
+                if (Random.Range(0, ++eligible) == 0) chosen = target;
+            }
+            // If the spawn area has no nearby burnables, use the closest eligible one.
+            if (!chosen && nearbyOnly) chosen = nearest;
             return TryIgnite(chosen);
         }
 

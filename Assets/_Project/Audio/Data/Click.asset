@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa760f8036d15c4cb7f1ceb8e125d70, type: 3}
   m_Name: Click
   m_EditorClassIdentifier: VectorViolet.ProSoundManager::VectorViolet.ProSoundManager.SoundData
-  clip: {fileID: 8300000, guid: 18bae24541f11cd4d9c3135812bac153, type: 3}
+  clip: {fileID: 8300000, guid: 26c32f4597e2c2a449f3c8f0d23f1c5a, type: 3}
   volume: 1
   pitch: 1
-  loop: 1
+  loop: 0
   useRandomPitch: 0
   randomPitchRange: 0.1
   spatialBlend: 0

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace FactorySabotage.Core.Events
+namespace Sastermate.Core.Events
 {
     public static partial class EventBus
     {

@@ -1,8 +1,8 @@
-using FactorySabotage.Gameplay.Tasks;
+using Sastermate.Gameplay.Tasks;
 using TMPro;
 using UnityEngine;
 
-namespace FactorySabotage.UI.HUD
+namespace Sastermate.UI.HUD
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(TextMeshProUGUI))]

@@ -1,8 +1,8 @@
 using System;
-using FactorySabotage.Core.Events;
+using Sastermate.Core.Events;
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Tasks
+namespace Sastermate.Gameplay.Tasks
 {
     /// <summary>Credits carbon points for successful tasks of any type.</summary>
     [DisallowMultipleComponent]

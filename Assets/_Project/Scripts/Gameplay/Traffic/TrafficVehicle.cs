@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Rigidbody), typeof(BoxCollider))]

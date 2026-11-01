@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FactorySabotage.Player
+namespace Sastermate.Player
 {
     /// <summary>Combines intended movement with a bounded, horizontal hose reaction.</summary>
     internal sealed class HoseMovementResponse

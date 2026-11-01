@@ -1,7 +1,7 @@
 using UnityEngine;
 using VectorViolet.Utilities;
 
-namespace FactorySabotage.Gameplay.Fire
+namespace Sastermate.Gameplay.Fire
 {
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(900)]

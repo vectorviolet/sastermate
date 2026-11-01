@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Tasks
+namespace Sastermate.Gameplay.Tasks
 {
-    [CreateAssetMenu(fileName = "NewTask", menuName = "Climate Guardians/Tasks/Task Definition")]
+    [CreateAssetMenu(fileName = "NewTask", menuName = "Sastermate/Tasks/Task Definition")]
     public sealed class TaskDefinition : ScriptableObject
     {
         [SerializeField] private string displayName = "New Task";

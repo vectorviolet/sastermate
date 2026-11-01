@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     /// <summary>Current footprints become whole-movement reservations as cars advance this tick.</summary>
     internal sealed class TrafficReservations

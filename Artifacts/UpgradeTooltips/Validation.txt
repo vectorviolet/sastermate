@@ -1,0 +1,15 @@
+Unity 6000.3.27f2 gameplay assembly compilation passed using installed package references. The new tooltip manager, owned tooltip event requests, updated EcoUpgradeButton, and definition descriptions compiled with no diagnostic output.
+
+34 headless gameplay/request checks passed via Tests/ClimateUpgrades/Run.ps1. Existing CP, warming, build-site, and Replay checks remain green. Added checks cover automatically finding the button title, requesting descriptions for disabled purchases, immediate left-press display requests without buying, ignoring right presses, and owner-specific pointer-exit requests. The purchase check now verifies tooltip count/availability updates instead of two serialized labels.
+
+CanvasTooltips.prefab was adapted from:
+C:/Users/user/Desktop/projects/game/unity/soulbonk/Assets/_Project/UI/Prefabs/CanvasTooltips.prefab
+The delayed hover/event pattern follows Soulbonk TooltipManager and TooltipTrigger. This project uses local Sastermate scripts, its installed LiberationSans font/material, an overlay Canvas with scaler, and a non-interactive CanvasGroup.
+
+Prefab validation passed: 16 objects with unique IDs, all 32 local object references resolve, one overlay canvas at sorting order 2000, popup hidden initially, popup interaction and raycasts disabled, and both Image/TMP raycast targets disabled. Copied Soulbonk script/font GUIDs were replaced with this project's resolved references. The Unity UI script GUIDs resolve in the installed UGUI package.
+
+Current Solar Panel, Recycling, and Afforestation assets retain the user's names, costs, and warming reductions. Only descriptions were added to these assets.
+
+Editor setup: Docs/ClimateUpgrades.md > Hover/hold descriptions
+Required manual step: place one CanvasTooltips prefab instance at the scene root.
+No scene wiring was performed. Native hover timing, popup layout/positioning, disabled-button pointer delivery, CanvasGroup close behavior, and visual appearance remain Play-mode checks; headless fixtures do not emulate those native systems.

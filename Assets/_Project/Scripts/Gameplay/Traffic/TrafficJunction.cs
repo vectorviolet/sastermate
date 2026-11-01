@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     /// <summary>Reserves a crossing or tight bend until the car's whole footprint leaves the area.</summary>
     [DisallowMultipleComponent]

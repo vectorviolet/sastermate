@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FactorySabotage.Player
+namespace Sastermate.Player
 {
     /// <summary>Faces the water stream while spraying, otherwise planar movement; leaves the physics body and camera alone.</summary>
     [DisallowMultipleComponent]

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace FactorySabotage.Player
+namespace Sastermate.Player
 {
     /// <summary>Fixed-step water parcels: gravity, finite travel, and swept collision.</summary>
     internal sealed class WaterJetSimulation

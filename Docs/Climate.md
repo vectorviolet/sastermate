@@ -13,7 +13,7 @@ Track Scene Fires is enabled by default. Ignition/extinguishing events update th
 3. Assign the existing **CarbonPointsText** to **CP Text**. Its existing CarbonPointsHud component can keep displaying the same shared wallet value.
 4. Assign **TaskRewards** to **Rewards**, or leave it empty for runtime discovery. Leave **Track Scene Fires** enabled for the existing fire system.
 5. Choose the initial **Current Temperature** and save the scene. Existing CP comes from TaskRewards. In Play mode, fires should raise temperature and putting them out should lower the active count; temperature itself drops when an eco-building purchase is made.
-6. Add a **Panel Manager** to the scene. On the game-over UI root, add **Set Active Panel**, keep the object inactive, and assign it to **Climate Manager > Game Over Panel**. Use **Game Over Panel Id = GameOver**. ClimateManager registers this inactive panel with PanelService and unregisters it when destroyed.
+6. Keep the scene's **Panel Manager**. Create a separate **GamePanels** object under the Canvas and add **Game Panel Presenter** there. On EndScreen, replace **Set Active Panel** with **Canvas Panel**, use **Panel Id = GameOver**, keep its GameObject active, and set its CanvasGroup alpha to zero with interaction/raycasts disabled. Add it to the presenter's Panels list with Visible In States = GameOver. See [Panels.md](Panels.md) for the complete editor wiring.
 
 From a building's successful purchase action, call:
 
@@ -23,14 +23,20 @@ climateManager.SpendCPForEcoBuilding(100, 0.25f);
 
 With at least 100 CP, this deducts 100 points and immediately reduces the temperature by 0.25, clamped at zero. Insufficient funds change neither value. Negative costs/reductions and non-finite reductions are rejected. A standard Button.onClick cannot directly supply both arguments; call this method from the building/upgrade component's button handler.
 
-At 2 degrees, GameOver logs once and latches IsGameOver. Further climate progression and purchases stop. It switches the application to **GameState.GameOver** and shows the registered **GameOver** panel through PanelService. Gameplay input, water spraying, fire progression, traffic, and fire ambience follow their existing non-Gameplay behavior. Pause/Back input cannot switch a finished game back to Gameplay.
+At 2 degrees, GameOver logs once and latches IsGameOver. Further climate progression and purchases stop. It switches the application to **GameState.GameOver**. GamePanelPresenter reacts to that state and shows its configured game-over CanvasPanel through PanelService. ClimateManager no longer owns panel references or registration. Gameplay input, water spraying, fire progression, traffic, and fire ambience follow their existing non-Gameplay behavior. Pause/Back input cannot switch a finished game back to Gameplay.
 
-`DemoScene` uses the existing **FireWarningHUD > EndScreen** as this panel, with a **Game Over** title. It starts hidden, and the temperature slider/text and shared CP references are assigned on ClimateManager. New GameState enum values were appended, preserving previous serialized values. A new scene/component instance starts with a fresh climate latch.
+Use the existing **EndScreen** with its **Game Over** title for this panel. Finish the CanvasPanel/presenter migration above in the Editor; the scene wiring is manual. Temperature slider/text and shared CP references remain assigned on ClimateManager. Existing GameState enum values are unchanged. A new scene/component instance starts with a fresh climate latch.
 
 The panel and its dimmed background stretch across the Canvas, with the title centered above the gameplay view. `Artifacts/ClimateGameOver/GameOver.png` shows the +2.00°C loss overlay in Play mode.
 
 The climate simulation respects GameManager's Gameplay state; pausing or visiting menus does not warm the city. It also works in a simple test scene without a GameManager. The UI and shared CP balance can continue refreshing while the simulation is paused.
 
-## Verification
+## Purchasable warming protection
+
+The end-screen split uses **LoseScreen** for the +2 degree GameOver state and **WinScreen** for GameWon. Climate and purchases freeze after either outcome. See [GameResults.md](GameResults.md) for current panel mappings and the WinGame/LoseGame hooks; earlier EndScreen examples below/above describe the original loss-only setup.
+
+The eco upgrade system adds solar panels, recycling centers, and planted trees that reduce the future rate of fire warming. It shares this manager's CP wallet, leaves the current temperature unchanged, and caps protection at 80% by default. See [ClimateUpgrades.md](ClimateUpgrades.md) for the prepared definitions, build sites, purchase buttons, and optional warming-rate HUD label. Replay reloads the scene to reset these upgrades along with temperature and the task wallet; wire the game-over button to `GameManager.Replay()` as described in [Panels.md](Panels.md).
+
+## Earlier game-over verification
 
 The full gameplay assembly compiled against the project's Unity 6000.3.18f1 package references. A live-fire Play-mode test started at 1.999 degrees and crossed the limit through normal Update warming. The screen stayed hidden below 2, opened once at exactly 2, displayed +2.00°C, and entered GameOver state. Repeated updates did not reopen it; Back/Pause input did not resume Gameplay, and an eco purchase could not reduce temperature after the game ended.

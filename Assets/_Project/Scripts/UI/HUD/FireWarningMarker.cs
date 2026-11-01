@@ -1,7 +1,7 @@
-using FactorySabotage.Gameplay.Fire;
+using Sastermate.Gameplay.Fire;
 using UnityEngine;
 
-namespace FactorySabotage.UI.HUD
+namespace Sastermate.UI.HUD
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]

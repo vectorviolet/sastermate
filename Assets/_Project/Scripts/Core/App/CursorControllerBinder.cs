@@ -2,7 +2,7 @@ using UnityEngine;
 using VectorViolet.Core.Events;
 using VectorViolet.Utilities;
 
-namespace FactorySabotage.Core.App
+namespace Sastermate.Core.App
 {
     public class CursorControllerBinder : GameStateListener
     {

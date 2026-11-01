@@ -1,4 +1,4 @@
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     /// <summary>Exclusive access to a crossing or a tight turn.</summary>
     internal sealed class TrafficGate

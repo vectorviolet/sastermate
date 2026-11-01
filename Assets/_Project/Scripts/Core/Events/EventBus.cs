@@ -1,7 +1,7 @@
 using UnityEngine;
 using VectorViolet.Core.Events;
 
-namespace FactorySabotage.Core.Events
+namespace Sastermate.Core.Events
 {
     /// <summary>
     ///     Centralized event hub for decoupled communication between systems.

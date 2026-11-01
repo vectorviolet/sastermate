@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     internal readonly struct TrafficPose
     {

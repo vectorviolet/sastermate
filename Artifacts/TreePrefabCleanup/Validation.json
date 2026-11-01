@@ -1,0 +1,26 @@
+[
+  {
+    "asset": "Assets\\_Project\\Environment\\Terrain\\New Terrain.asset",
+    "removedMissingPrefabGUID": "665fd4f853bb644bbc0bbc860d7659e3",
+    "treeInstances": 0,
+    "treePrototypesAfter": 0,
+    "terrainFieldsVerified": true,
+    "embeddedTexturesUnchanged": true,
+    "objectCount": 2,
+    "backup": "Temp\\TreePrefabCleanup\\0_New Terrain.asset",
+    "originalSHA256": "795bb4d79b83c7686d16fd423a4269a3e694b1579abf09f4a480dbd7b200003e",
+    "fixedSHA256": "a5fa74e391cc18f69fbfc32e2cbc51fe658f8a556cf51dc7c9cb8fa5a938e202"
+  },
+  {
+    "asset": "Assets\\_Project\\Environment\\AureDevGames\\Water Stylized Shader Orto & Perspective Camera\\Terrain\\Terrain1Data.asset",
+    "removedMissingPrefabGUID": "c8719e1c6487d24ca6ebb3c2473ebea3",
+    "treeInstances": 0,
+    "treePrototypesAfter": 0,
+    "terrainFieldsVerified": true,
+    "embeddedTexturesUnchanged": true,
+    "objectCount": 2,
+    "backup": "Temp\\TreePrefabCleanup\\1_Terrain1Data.asset",
+    "originalSHA256": "7a66253d5d1e573acd7e1ac491b23856014269d3202c41aebf80250d3bc02eff",
+    "fixedSHA256": "c4cc939f3f36f067ab402166a9c46b23775183c1b19d44b1dfe9ff74793d6f36"
+  }
+]

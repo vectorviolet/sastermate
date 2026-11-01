@@ -1,9 +1,9 @@
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
 using UnityEngine.InputSystem;
-using static FactorySabotage.Input.GameControls;
+using static Sastermate.Input.GameControls;
 
-namespace FactorySabotage.Input.Listeners
+namespace Sastermate.Input.Listeners
 {
     /// <summary>
     ///     Dedicated listener for generic menu inputs.

@@ -1,8 +1,8 @@
-using FactorySabotage.Core.Events;
+using Sastermate.Core.Events;
 using UnityEngine;
 using VectorViolet.ProSoundManager;
 
-namespace FactorySabotage.Gameplay.Fire
+namespace Sastermate.Gameplay.Fire
 {
     [DisallowMultipleComponent]
     public sealed class FireExtinguishAudio : MonoBehaviour

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
 using UnityEngine;
 using UnityEngine.Audio;
 using VectorViolet.ProSoundManager;
 
-namespace FactorySabotage.Gameplay.Fire
+namespace Sastermate.Gameplay.Fire
 {
     [DisallowMultipleComponent]
     public sealed class FireAmbienceController : GameStateListener

@@ -1,6 +1,6 @@
 using VectorViolet.ProAppState;
 
-namespace FactorySabotage.Core.App
+namespace Sastermate.Core.App
 {
     public abstract class GameStateListener : AppStateListener<GameManager, GameState>
     {

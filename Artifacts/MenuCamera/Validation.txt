@@ -1,0 +1,7 @@
+﻿Gameplay assembly compilation passed against Unity 6000.3.27f2 and installed Cinemachine 3.1.5 references.
+72 framing cases passed against the compiled production CalculateOrthographicSize method.
+Every case checked all eight bounding-box corners at 45/75/90 degree pitch, three yaws, landscape/portrait/square/ultrawide aspect ratios, and 0/2 world-unit padding.
+Menu orbit update: gameplay assembly compilation passed against the same Unity/Cinemachine references. The existing 72 fixed-angle framing cases still pass; those cases do not exercise the new orbit envelope.
+Orbit In Menu defaults to enabled at 5 degrees per second. It rotates the camera about the city bounds center using unscaled time, freezes the outgoing pose when leaving MainMenu, and frames a fixed lens for the entire turn when Frame On Menu Open is enabled.
+Cinemachine priority switching, orbit motion and framing throughout a full turn, blends, native scene composition, and UI button wiring remain manual editor checks. No live Unity Play-mode verification was performed for the orbit update.
+Editor setup: Docs/MenuCamera.md

@@ -1,0 +1,17 @@
+Investigated the saved DemoScene and Editor.log:
+- One EcoUpgradeSite exists (SolarSite01); its Built Visual references the solar prefab asset in the Project, not a scene child.
+- The previous site validator rejected that reference. Editor.log contains the matching EcoUpgradeSite warning.
+- No recycling or afforestation sites are present in the saved scene.
+- The three Buy buttons still contain inherited StartGame persistent callbacks; their normal purchase listeners are registered by EcoUpgradeButton. Remove those unused callbacks in the Editor.
+- The scene's Buy text is authored as Buy; the previous script replaced it at runtime. That text replacement has been removed.
+
+Changes:
+- Sites accept either a model prefab or an existing child model. Prefab assets create a hidden child instance positioned at the site's origin; the original asset stays unchanged. Pre-Awake/live-reload purchases also instantiate safely.
+- Upgrade buttons preserve authored labels and report an absent building location accurately.
+- GameplayInputAdapter queues attack presses and filters them in Update using fresh UI raycasts plus UpgradePanel visibility. A blocked held attack is released; closing/leaving UI requires a new press.
+- Water emission/IsSpraying also check UpgradePanel visibility, covering Fire animation and water-loop consumers while leaving the climate/game state in Gameplay for shopping.
+
+Unity 6000.3.27f2 gameplay assembly compilation passed with installed package references and no diagnostic output.
+45 headless checks passed via Tests/ClimateUpgrades/Run.ps1. Coverage includes unchanged Buy labels, prefab asset instantiation without asset modification, pre-Awake purchase visibility, rejected unrelated scene visuals, CP/temperature/purchase/Replay regression checks, consumed UI attacks, release-on-block, no held-mouse resumption, fresh press behavior, and canceled queued input.
+
+No scene editor wiring was changed. Native UI raycasts, prefab rendering/scale/placement, and Input System dispatch still require a Play-mode check. Position SolarSite01 on a roof and add matching Recycling/Afforestation sites to make those purchase types available.

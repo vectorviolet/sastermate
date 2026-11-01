@@ -1,0 +1,20 @@
+# Isometric city view for the main menu
+
+`MenuCityCamera` raises a dedicated CinemachineCamera to priority 100 in MainMenu, then lowers it to -100 for other states so the player camera takes over. The existing Cinemachine Brain controls the blend. The controller restores the authored priority when disabled.
+
+While MainMenu is open, the camera slowly orbits the center of the city's renderer bounds. **Orbit In Menu** is enabled by default and **Orbit Speed = 5** degrees per second gives a 72-second turn. Lower the speed for a gentler motion, use a negative speed to reverse direction, or disable Orbit In Menu for a still view. The orbit uses unscaled time, so it continues if the menu pauses gameplay. It stops immediately on Play, keeping a stable outgoing pose for the transition to the player camera.
+
+## Editor setup
+
+1. Create a new **Cinemachine Camera** named **MenuCamera** at the scene root, outside the Canvas and player hierarchy. Keep it active. Set **Priority = -100**, **Tracking Target = None**, **Position Control = None**, and **Rotation Control = None**. This camera is independent of the player camera director/style list.
+2. On your scene's UI controller (the active object with **Game Panel Presenter**, outside the panel roots), add **Menu City Camera**. Assign MenuCamera to its **Menu Camera** field and the **City** hierarchy root to **City Root**. Use a common environment root if roads/trees live outside City, excluding distant scenery and large water planes you do not want to frame.
+3. Set **Pitch = 35**, **Yaw = 45**, and **Padding = 2**, then open the component's context menu and choose **Frame City**. It positions the camera above the geometry and fits an orthographic view to active MeshRenderer bounds. These defaults give an isometric-style view with visible building sides. Existing components retain their serialized Pitch (previously 75), so change it explicitly in the Inspector. Set Pitch to **90** for a vertical top-down view. **Frame On Menu Open** recomputes the fit when entering MainMenu, using the output camera's current aspect ratio. Change the controller's Pitch rather than the Cinemachine camera's Transform rotation, since Frame City sets that transform.
+4. On **GameManager**, set **Startup State = MainMenu** to show the menu and overhead camera at launch. Gameplay remains the default for existing scenes until you change that setting. Wire the menu Play button to **GameManager.StartGame()**; this enters Gameplay, updates the panels, and returns the Brain to the player camera. Pause/Back inputs leave MainMenu open.
+5. Set the menu's full-screen **Background Image** color alpha to approximately **0.25** for a dimmed city behind the buttons, or **0** for a clear view. The menu's CanvasPanel should be visible with CanvasGroup alpha 1 while open.
+6. On the output **Main Camera > Cinemachine Brain**, use an **Ease In Out** default blend around **0.6 seconds** if you want a smooth transition. Keep the output camera orthographic, as in the existing setup. Save the scene.
+
+The city framing adjusts for landscape and portrait aspect ratios and includes geometry height in the fit. With Orbit In Menu enabled, Frame City fits the entire 360-degree turn and keeps the lens size fixed throughout the orbit. This can show more space around the city than a single-angle fit. Distance is increased when necessary to keep the nearest city geometry beyond the near plane; the far plane is extended if needed. Position/rotation pipeline components should remain None on MenuCamera so the controller can set its pose.
+
+Keep Frame On Menu Open enabled for automatic framing. If disabled, the orbit starts from the camera's authored position and rotation, around the city bounds center; framing and clipping then depend on your manual setup. After changing the orbit toggle or framing settings outside Play mode, use **Frame City** again to update the preview.
+
+Editor wiring and visual composition are manual. Test both MainMenu startup and the Play button return to Gameplay after setup.

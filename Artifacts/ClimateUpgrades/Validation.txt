@@ -1,0 +1,15 @@
+Unity 6000.3.27f2 gameplay assembly compilation passed using the installed package references, including the new climate/upgrade scripts and Replay action. Compiler exited successfully with no diagnostic output.
+
+29 headless checks passed against production ClimateManager, EcoUpgradeDefinition, EcoUpgradeSite, EcoUpgradeManager, EcoUpgradeButton, GameManager, TaskRewardManager, TaskDefinition, and CarbonPointLedger sources.
+Covered shared-wallet deductions, successful visual activation, rejection without free sites or CP, cumulative warming reduction, unchanged temperature at purchase, capped protection, button affordability after task rewards, MainMenu/Pause/GameOver gates, callback reentrancy, local-wallet fallback, Replay duplicate-click locking, persistent/replaced manager state, unrelated scene completion, invalid scene paths, and failed-load retry.
+Run again with: powershell -NoProfile -File Tests/ClimateUpgrades/Run.ps1
+The runner suppresses Unity serialized-field warnings in the headless fixture, matching Unity's compiler settings. Its stubs do not emulate native Unity object destruction or scene lifecycle.
+
+14 existing/extended GameAudioPresenter playback-routing checks passed, including following the replacement player after scene reload and removing the scene-load subscription when disabled. Actual speaker output was not tested.
+
+SolarPanels, RecyclingCenter, and PlantTree asset costs/reductions and script GUID references were verified from their saved YAML files.
+Definitions: Assets/_Project/Data/ClimateUpgrades
+Manual build-site/UI setup: Docs/ClimateUpgrades.md
+Replay button wiring: Docs/Panels.md
+
+No scene or prefab editor wiring was performed for these features. Native Play-mode loading, complete scene reset, model activation, UI raycasts, and audio output remain manual editor checks.

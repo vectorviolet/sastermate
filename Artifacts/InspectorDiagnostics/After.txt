@@ -1,0 +1,13 @@
+SUPERSEDED: These checks compared ActiveEditorTracker targets only. They did not verify the visible Inspector. The user reported that the UI remained broken; InspectorSelectionRefresh.cs was removed. These results must not be treated as a successful Inspector fix.
+
+Case 0 City: matches=True; locked=False; targets=City,City
+Case 1 MainCamera: matches=True; locked=False; targets=MainCamera,MainCamera,MainCamera,MainCamera,MainCamera,MainCamera
+Case 2 Lane_A: matches=True; locked=False; targets=Lane_A,Lane_A,Lane_A
+Case 3 TrafficCar: matches=True; locked=False; targets=,TrafficCar,TrafficCar,TrafficCar,TrafficCar,TrafficCar
+Case 4 City + Lane_A: matches=True; locked=False; targets=City,Lane_A,City,Lane_A,Lane_A
+Case 5 City + MainCamera: matches=True; locked=False; targets=MainCamera,City,MainCamera,City,MainCamera,MainCamera,MainCamera,MainCamera
+Case 6 : matches=True; locked=False; targets=
+Case 7 City: matches=True; locked=False; targets=City,City
+Case 8 MainCamera: matches=True; locked=True; targets=City,City
+Native selection callbacks=0
+New errors=0

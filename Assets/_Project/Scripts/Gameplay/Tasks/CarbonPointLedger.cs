@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FactorySabotage.Gameplay.Tasks
+namespace Sastermate.Gameplay.Tasks
 {
     /// <summary>Session balance with one reward per completed task instance.</summary>
     public sealed class CarbonPointLedger

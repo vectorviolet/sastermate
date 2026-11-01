@@ -1,9 +1,9 @@
-using FactorySabotage.Core.Events;
+using Sastermate.Core.Events;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static FactorySabotage.Input.GameControls;
+using static Sastermate.Input.GameControls;
 
-namespace FactorySabotage.Input.Listeners
+namespace Sastermate.Input.Listeners
 {
     /// <summary>
     ///     Dedicated listener for global inputs that should be available regardless of Game State.

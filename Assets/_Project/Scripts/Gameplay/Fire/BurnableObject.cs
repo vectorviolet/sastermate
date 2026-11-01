@@ -1,10 +1,10 @@
 using System;
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
-using FactorySabotage.Gameplay.Tasks;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
+using Sastermate.Gameplay.Tasks;
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Fire
+namespace Sastermate.Gameplay.Fire
 {
     [DisallowMultipleComponent]
     public sealed class BurnableObject : MonoBehaviour

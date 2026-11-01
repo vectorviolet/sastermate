@@ -1,0 +1,9 @@
+﻿Full MCPForUnity.Editor assembly compilation: passed using Unity 6000.3.18f1 compiler and the project assembly response file.
+Ten threading checks: passed.
+Confirmed defect: missing cached synchronization context let callbacks and command queue pumping execute on worker threads.
+Live editor context at the time of the Inspector freeze: not captured.
+Inspector UI recovery: not verified; Unity Editor is closed.
+Odin Inspector integration: restored to enabled.
+InspectorSelectionRefresh workaround: removed.
+Fix currently lives in Library/PackageCache/com.coplaydev.unity-mcp@4384f8b518e8; package re-resolution or cache deletion may overwrite it.
+Saved patch: Artifacts/InspectorDiagnostics/MCPMainThreadDispatch.patch

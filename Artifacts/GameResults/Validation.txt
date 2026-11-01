@@ -1,0 +1,17 @@
+Win/lose outcome support compiled against Unity 6000.3.27f2 with installed package references, with no compiler diagnostic output.
+
+GameState.GameOver retains its serialized value 5 for losses; GameState.GameWon is appended at 6. GameManager.WinGame/LoseGame accept one result per run, Replay accepts either terminal state, and IsGameOver covers both outcomes. ClimateManager routes +2 degrees through LoseGame and freezes warming and purchases after either result.
+
+54 headless gameplay/economy/input checks passed via Tests/ClimateUpgrades/Run.ps1. Added outcome checks cover serialized enum stability, distinct victory status, first-result preservation in both directions, climate/purchase freeze on victory, no post-victory loss overwrite, Pause/Back guards, Replay from victory, and rejection of end-game calls from MainMenu.
+
+22 panel checks passed using the production CanvasPanel, GamePanelPresenter, and shared PanelBase/PanelManager/PanelService code with stub Unity objects. Added checks confirm GameOver hides the win panel, GameWon shows only the win panel, and a result mapping change hides the previous end screen. Fixture-only serialized-field warning CS0649 is suppressed in the actual Unity compiler response file.
+
+Saved scene inspection:
+- LoseScreen CanvasPanel Id = LoseScreen, already mapped to GameOver in GamePanelPresenter.
+- WinScreen CanvasPanel Id = WinScreen, not yet listed in GamePanelPresenter. Add it with Visible In States = GameWon only.
+- Both Play Again buttons already point to GameManager.Replay().
+
+No existing automatic success condition was found. WinGame() is the objective completion hook; the user was asked whether victory should follow maximum eco protection, survival time, or an explicit mission result. No win condition was assumed.
+
+Manual editor setup: Docs/GameResults.md
+No scene wiring was changed. Native panel layout/raycast interaction and full scene reload still require Play-mode checks.

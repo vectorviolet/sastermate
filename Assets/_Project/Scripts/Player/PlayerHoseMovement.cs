@@ -1,8 +1,8 @@
-using FactorySabotage.Core.App;
+using Sastermate.Core.App;
 using UnityEngine;
 using VectorViolet.ProMovement;
 
-namespace FactorySabotage.Player
+namespace Sastermate.Player
 {
     /// <summary>Applies hose handling after EntityMovement has written this physics step's velocity.</summary>
     [DisallowMultipleComponent]

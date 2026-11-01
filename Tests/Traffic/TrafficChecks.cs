@@ -46,6 +46,34 @@ internal static class TrafficChecks
         Expect(!new TrafficPath(new[] { Vector3.zero }, false).IsValid,
             "Incomplete routes are rejected");
 
+        var north = new TrafficPath(new[] { new Vector3(0, 5.5f, -3), new Vector3(0, 5.5f, 3) }, false, 0.25f);
+        var south = new TrafficPath(new[] { new Vector3(0, 5.5f, 3), new Vector3(0, 5.5f, -3) }, false, 0.25f);
+        Expect(Near(north.Position(3).x, 0.25f) && Near(south.Position(3).x, -0.25f) && Near(north.Position(3).y, 5.5f),
+            "Opposite directions on a centre line become separate right-hand lanes without changing road height");
+        var canPass = true;
+        for (var step = 0; step <= 120; step++)
+        {
+            var distance = step * 0.05f;
+            var a = new TrafficPose(north.Position(distance), 0f);
+            var b = new TrafficPose(south.Position(distance), 180f);
+            if (Box(a).Overlaps(Box(b))) canPass = false;
+        }
+        Expect(canPass, "Opposing cars pass along the same road without overlapping their safety footprints");
+        var corner = new TrafficPath(new[] { Vector3.zero, new Vector3(0, 0, 2), new Vector3(2, 0, 2) }, false, 0.25f);
+        Expect(Near(corner.PointPosition(1).x, 0.25f) && Near(corner.PointPosition(1).z, 1.75f),
+            "A right-angle bend keeps a consistent lane offset on both adjoining segments");
+        var offsetLoop = new TrafficPath(new[] { Vector3.zero, new Vector3(0, 0, 3), new Vector3(3, 0, 3), new Vector3(3, 0, 0) }, true, 0.25f);
+        Expect(Vector3.Distance(offsetLoop.Position(offsetLoop.Length), offsetLoop.PointPosition(0)) < 0.0001f && Near(offsetLoop.Length, 10f),
+            "The offset loop joins correctly at its closing corner");
+        var reversing = new TrafficPath(new[] { Vector3.zero, Vector3.forward, Vector3.zero, Vector3.zero }, false, 0.25f);
+        var finite = true;
+        for (var i = 0; i < reversing.PointCount; i++)
+        {
+            var p = reversing.PointPosition(i);
+            if (float.IsNaN(p.x) || float.IsNaN(p.z) || float.IsInfinity(p.x) || float.IsInfinity(p.z)) finite = false;
+        }
+        Expect(finite, "Reversing and repeated waypoints do not produce invalid offset positions");
+
         Expect(Box(Pose(0f, 0f)).Overlaps(Box(Pose(0f, 0.3f))),
             "Overlapping car bodies are detected");
         Expect(!Box(Pose(0f, 0f)).Overlaps(Box(Pose(0.3f, 0f, 180f))),

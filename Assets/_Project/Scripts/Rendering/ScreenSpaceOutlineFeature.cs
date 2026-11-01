@@ -4,7 +4,7 @@ using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.RenderGraphModule.Util;
 using UnityEngine.Rendering.Universal;
 
-namespace FactorySabotage.Rendering
+namespace Sastermate.Rendering
 {
     /// <summary>Depth/normal outlines for opaque geometry. Unity 6.3 / URP 17.3 Render Graph.</summary>
     public sealed class ScreenSpaceOutlineFeature : ScriptableRendererFeature

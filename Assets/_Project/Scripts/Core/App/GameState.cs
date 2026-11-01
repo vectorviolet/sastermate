@@ -1,4 +1,4 @@
-namespace FactorySabotage.Core.App
+namespace Sastermate.Core.App
 {
     public enum GameState
     {
@@ -9,6 +9,7 @@ namespace FactorySabotage.Core.App
 
         // Keep existing serialized enum values stable; append new states below.
         MainMenu,
-        GameOver
+        GameOver,
+        GameWon
     }
 }

@@ -10,7 +10,9 @@ Driving components and settings belong on the common prefab. Visual variety come
 
 Vehicle separation uses the fitted BoxCollider's actual size and orientation. Each physics step checks the full swept box of the proposed movement, including rotation, against other cars and movements already granted during that step. This prevents endpoint-only checks from allowing two cars to cross through each other between frames. A blocked spawn is skipped. The manager never forces a car through an occupied area.
 
-TrafficJunction zones reserve crossings **and sharp bends** for one car until its whole body clears them. These zones give turning cars room for their rear to swing without a follower closing that space. Opposing traffic needs separate lane routes; cars stop when blocked and do not overtake or reverse out of a head-on blockage.
+TrafficJunction zones reserve crossings **and sharp bends** for one car until its whole body clears them. These zones give turning cars room for their rear to swing without a follower closing that space. Opposing traffic needs separate lane positions; cars stop when blocked and do not overtake or reverse out of a head-on blockage. **Right Lane Offset** shifts road-centre waypoints to the right in travel direction, with joined offsets at corners. Leave it at zero for waypoints already authored inside a lane. The gizmos show the resulting driving path.
+
+DemoScene uses **Right Lane Offset = 0.25** on Lane_A and 14 shared turn zones under `[Road]/Traffic Junctions`. A 30,000-step Play-mode check with eight randomly selected cars accumulated over 2,700 world units with no footprint overlaps. If you move route corners, move their amber junction zones too.
 
 ## Manual editor setup: start with one straight lane
 
@@ -19,7 +21,7 @@ TrafficJunction zones reserve crossings **and sharp bends** for one car until it
 1. In `Assets/_Project/Cars`, right-click and choose **Create > Climate Guardians > Traffic > Model Catalog**. Name it **TrafficModels**.
 2. Add the desired visual FBXs from `Assets/_Project/Cars/Models` to its **Models** array, for example sedan, taxi, and SUV. Use the original visual models rather than copies with driving components. Entries with no renderer, a Rigidbody, or a TrafficVehicle are skipped.
 3. Use the catalog's **Model Scale** to fit the whole model family to one lane, and **Model Rotation** to make the imported models face the car root's **+Z**. The current curated car models already import at scale 0.15; start with Model Scale `(1, 1, 1)` and adjust visually in Play mode. **Center And Ground** is optional and off by default so authored model pivots are preserved.
-4. Open the existing `Assets/_Project/Cars/Prefabs/TrafficCar.prefab`. Keep its root at scale `(1, 1, 1)` with its TrafficVehicle, Rigidbody, and BoxCollider. Remove the previous fixed **Model** child to avoid displaying it alongside a picked model.
+4. Open the existing `Assets/_Project/Cars/TrafficCar.prefab`. Keep its root at scale `(1, 1, 1)` with its TrafficVehicle, Rigidbody, and BoxCollider. Remove the previous fixed **Model** child to avoid displaying it alongside a picked model.
 5. Add an empty child named **Visuals**, reset its local transform, and assign it to **Traffic Vehicle > Visual Root**. Assign **TrafficModels** to **Model Catalog**. Visuals should contain only models controlled by the picker; common wheels or other fixed attachments can stay elsewhere under TrafficCar. Visual Root can also be left empty for an automatic runtime container.
 6. Save the common prefab. A different model can be selected each time a pooled car respawns. Each selected model is automatically refitted even when **Fit Collider On Awake** is disabled; that checkbox only controls the older preplaced-model setup.
 
@@ -33,7 +35,7 @@ For a new common prefab, start with an empty TrafficCar and add **Traffic Vehicl
 4. Leave **Loop** off for the first straight-road test. Put the start and end beyond the visible road when possible so spawns/despawns are unobtrusive. Use at least two distinct points.
 5. Add several points around curved road pieces so the polyline follows the bend inside the lane. A waypoint line crossing a sidewalk or a building is still the path the car will try to follow.
 
-For opposing traffic, make **Lane_B** on the other side of the road with its points ordered in the opposite driving direction. Each route represents one lane. Enable Loop only for a complete, connected road loop; inspect the closing line from last to first to ensure it stays on the road.
+For opposing traffic, make **Lane_B** with its points ordered in the opposite driving direction. Either place each route inside its actual lane with **Right Lane Offset = 0**, or use road-centre waypoints with a positive offset on both routes. On the current one-unit-wide roads, **0.25** gives the current car models enough room to pass. A route that retraces a street in the opposite direction also uses the correct side automatically. This does not infer a reverse route or add branches. Each route represents one lane. Enable Loop only for a complete, connected road loop; inspect the closing line from last to first to ensure it stays on the road.
 
 Under **Traffic Route > Scene Gizmos**, use **Show Gizmos**, **Show Waypoint Labels**, **Draw On Top**, **Route Color**, **Gizmo Size**, and **Gizmo Height Offset** to adjust the preview. Selected routes use thicker lines. Marker sizes adapt to the Scene camera, and incomplete routes show a prompt to add waypoints. These previews also draw when the component is collapsed; their drawing code is editor-only.
 
@@ -67,6 +69,7 @@ For player stopping, create a layer such as **TrafficObstacle** under **Project 
 
 | Component | Setting | Meaning |
 | --- | --- | --- |
+| Traffic Route | Right Lane Offset | World-space shift to the right of road-centre waypoints; zero preserves explicitly authored lanes |
 | Traffic Manager | Maximum Cars | Maximum active cars; blocked starts can keep the actual count lower |
 | Traffic Manager | Initial Cars | Cars placed along lanes during Awake, capped by Maximum Cars |
 | Traffic Manager | Initial Spawn Attempts | Random positions tested per lane per initial car |
@@ -86,9 +89,9 @@ This is controlled ambient traffic on authored routes. It does not infer lane co
 
 ## Validation
 
-The gameplay assembly compiles with the project's Unity 6000.3.18f1 packages. Nineteen headless checks cover lane traversal, loop/end handling, clearance, narrow parallel lanes, bridge height separation, high-speed crossing paths, safe spawning, rotation sweeps, exclusive gates, and an eight-car, 20,000-step loop with corner reservations. The loop accumulated over 1,400 world units of travel with no physical footprint overlaps or global standstill.
+The gameplay assembly compiles with the project's Unity 6000.3.18f1 packages. Twenty-four headless checks cover lane traversal, loop/end handling, clearance, narrow parallel lanes, bridge height separation, high-speed crossing paths, safe spawning, rotation sweeps, exclusive gates, and an eight-car, 20,000-step loop with corner reservations. The loop accumulated over 1,400 world units of travel with no physical footprint overlaps or global standstill.
 
-Startup population was also checked in Play mode on DemoScene's 242.85-unit Lane_A loop: eight cars appeared immediately at different lane distances, spanning 146.45 units in the sampled run, with no fitted-footprint clearance overlaps. All eight advanced, totaling over 398 units of travel before GameOver stopped traffic, and remained non-overlapping. Additional Awake checks confirmed that Initial Cars is capped by Maximum Cars, zero disables startup filling, and a lane fully covered by a junction receives no initial cars. The 19 core regression checks still pass.
+Startup population was also checked in Play mode on DemoScene's 242.85-unit Lane_A loop: eight cars appeared immediately at different lane distances, spanning 146.45 units in the sampled run, with no fitted-footprint clearance overlaps. All eight advanced, totaling over 398 units of travel before GameOver stopped traffic, and remained non-overlapping. Additional Awake checks confirmed that Initial Cars is capped by Maximum Cars, zero disables startup filling, and a lane fully covered by a junction receives no initial cars. The 24 core regression checks pass, including opposing offset lanes, joined corners, loop closure, road height, and degenerate waypoints.
 
 After catalog setup, check in Play mode that only one picked body is visible per car, that different models appear over several spawns, and that the root BoxCollider matches each selection. Check shared orientation and wheel/road height before increasing the car cap. Model changes occur only while the pooled car is inactive, before it is allowed onto the road.
 

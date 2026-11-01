@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
-    [CreateAssetMenu(fileName = "TrafficModels", menuName = "Climate Guardians/Traffic/Model Catalog")]
+    [CreateAssetMenu(fileName = "TrafficModels", menuName = "Sastermate/Traffic/Model Catalog")]
     public sealed class TrafficModelCatalog : ScriptableObject
     {
         [Tooltip("Visual FBX models or visual-only prefabs. Movement, Rigidbody, and the main collider belong on TrafficCar.")]

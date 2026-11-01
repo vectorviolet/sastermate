@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
 using TMPro;
 using UnityEngine;
 
-namespace FactorySabotage.UI.HUD
+namespace Sastermate.UI.HUD
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform))]

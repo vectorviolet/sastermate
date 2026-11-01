@@ -708,7 +708,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ViewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord7.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );
@@ -1334,7 +1334,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ase_viewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord1.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );
@@ -1721,7 +1721,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ase_viewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord4.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );
@@ -2093,7 +2093,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ase_viewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord2.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );
@@ -2494,7 +2494,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ase_viewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord3.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );
@@ -3037,7 +3037,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ViewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord7.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );
@@ -3540,7 +3540,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ase_viewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord1.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );
@@ -3912,7 +3912,7 @@ Shader "Vefects/SH_Vefects_VFX_URP_Pressure_Pee_Stream_01"
 				float temp_output_4_0_g22 = _FresnelPower;
 				float lerpResult3_g22 = lerp( ( -1.0 * temp_output_4_0_g22 ) , temp_output_4_0_g22 , ase_vface);
 				float fresnelNdotV1_g22 = dot( float3( dot( tanToWorld0, tanNormal1_g22 ), dot( tanToWorld1, tanNormal1_g22 ), dot( tanToWorld2, tanNormal1_g22 ) ), ase_viewDirWS );
-				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( 1.0 - fresnelNdotV1_g22, lerpResult3_g22 ) );
+				float fresnelNode1_g22 = ( _FresnelBias + _FresnelScale * pow( max( 1.0 - fresnelNdotV1_g22, 0.0001 ), lerpResult3_g22 ) );
 				float eyeDepth = input.ase_texcoord1.z;
 				float cameraDepthFade111 = (( eyeDepth -_ProjectionParams.y - _CameraDepthFadeOffset ) / _CameraDepthFadeLength);
 				float op62 = saturate( ( saturate( ( saturate( ( saturate( ( ( ( tex2DNode53.r * ( lerpResult250 * tex2D( _PressureTexture, ( float3( ( ( texCoord1_g21 * appendResult4_g21 ) + appendResult5_g21 ) ,  0.0 ) + float3( ( ( ( (tex2D( _PressureDistortionTextureNormal, panner70 ).rgb).xy + -0.5 ) * 2.0 ) * lerpResult266 ) ,  0.0 ) ).xy ).g ) ) * _OpacityMult ) * distanceDepth36 ) ) * ( 1.0 - fresnelNode1_g22 ) ) ) * saturate( cameraDepthFade111 ) ) ) * input.ase_color.a ) );

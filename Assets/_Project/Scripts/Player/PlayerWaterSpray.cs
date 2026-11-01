@@ -1,9 +1,10 @@
 using System;
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
+using Sastermate.Input;
 using UnityEngine;
 
-namespace FactorySabotage.Player
+namespace Sastermate.Player
 {
     /// <summary>A mouse-aimed hose with ballistic water, swept collision, and impact splashes.</summary>
     [DisallowMultipleComponent]
@@ -54,7 +55,8 @@ namespace FactorySabotage.Player
         private bool _hasAimPosition;
         private Vector2 _aimScreenPosition;
 
-        public bool IsSpraying => _attackHeld && isActiveAndEnabled && _jetMesh != null && GameManager.IsGameplay;
+        public bool IsSpraying => _attackHeld && isActiveAndEnabled && _jetMesh != null && GameManager.IsGameplay
+            && !GameplayUiInput.IsUpgradePanelOpen;
         public bool HasHit { get; private set; }
         public RaycastHit CurrentHit { get; private set; }
         public Vector3 RayEndPoint { get; private set; }
@@ -218,7 +220,7 @@ namespace FactorySabotage.Player
             HasHit = false;
             CurrentHit = default;
             var dt = Time.fixedDeltaTime;
-            if (_attackHeld)
+            if (_attackHeld && !GameplayUiInput.IsUpgradePanelOpen)
             {
                 _emissionTime += dt;
                 var interval = 1f / Mathf.Max(1, waterParcelsPerSecond);
@@ -239,7 +241,7 @@ namespace FactorySabotage.Player
             // Update aim after camera/model movement. Already-emitted water keeps its velocity.
             UpdateMouseAim();
             var count = 0;
-            if (_attackHeld) _jetPoints[count++] = transform.position;
+            if (_attackHeld && !GameplayUiInput.IsUpgradePanelOpen) _jetPoints[count++] = transform.position;
             count = _water.CopyPositions(_jetPoints, count);
             var joinDistance = Mathf.Max(0.15f, jetSpeed / Mathf.Max(1, waterParcelsPerSecond) * 3f);
             if (HasHit && count > 0 && Vector3.Distance(_jetPoints[count - 1], CurrentHit.point) < joinDistance)

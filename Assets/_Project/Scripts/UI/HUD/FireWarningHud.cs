@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using FactorySabotage.Core.App;
-using FactorySabotage.Core.Events;
-using FactorySabotage.Gameplay.Fire;
+using Sastermate.Core.App;
+using Sastermate.Core.Events;
+using Sastermate.Gameplay.Fire;
 using UnityEngine;
 
-namespace FactorySabotage.UI.HUD
+namespace Sastermate.UI.HUD
 {
     /// <summary>Shows a pooled warning at the screen edge for each off-screen fire.</summary>
     [DisallowMultipleComponent]

@@ -1,7 +1,7 @@
-using FactorySabotage.Gameplay.Fire;
+using Sastermate.Gameplay.Fire;
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Buildings
+namespace Sastermate.Gameplay.Buildings
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]

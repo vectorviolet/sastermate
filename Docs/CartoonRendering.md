@@ -168,6 +168,14 @@ The original outline mask could fill entire surfaces with black because its poin
 
 GPU regression draws tested seven scenarios at both 1- and 3-pixel widths. Flat orthographic/perspective slopes and missing normals previously produced 3,136 black pixels out of 3,136 tested pixels; the corrected shader produced zero. A quantized distant perspective plane also became clean. Real depth steps, normal creases, and silhouettes retained the same 1- and 3-pixel stroke coverage. Shader compilation and Console error checks passed. Results are recorded in `Artifacts/CartoonRendering/OutlineRegression.json`.
 
+## Imported VFX and mirror compatibility
+
+The fire erosion shader clamps the bases of its noise and mask powers to `0.0001`. Both pressure-water shader variants use the same lower bound for their Fresnel power. This avoids undefined negative-base powers and zero raised to a negative exponent while preserving positive HDR values. These are edits to generated Amplify shader source; regenerating the imported graphs can overwrite them. Retain equivalent Maximum nodes before Power if you edit those graphs later.
+
+The imported kMirrors component uses `ProfilingScope` and `UniversalRenderPipeline.SingleCameraRequest`. Reflection requests run in LateUpdate after camera movement, outside SRP rendering callbacks; submitting from beginCameraRendering causes recursive-render errors. It follows Camera.main during play and the last active Scene view camera while editing. Reflection textures recreate after disable/enable, and the previous GL culling state is restored after each request. Texture creation, recreation, and rendering were checked without warnings or errors.
+
+See Unity's [render request documentation](https://docs.unity.com/en-us/engine/6000.3/manual/cameras/urp/multiple/user-render-requests) for the supported request API.
+
 ## References
 
 - [Shader Graph 17.3 Custom Function node](https://docs.unity3d.com/Packages/com.unity.shadergraph@17.3/manual/Custom-Function-Node.html)

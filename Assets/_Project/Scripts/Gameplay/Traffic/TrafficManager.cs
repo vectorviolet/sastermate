@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using FactorySabotage.Core.App;
+using Sastermate.Core.App;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     /// <summary>Random ambient traffic with centralized, swept movement reservations.</summary>
     [DisallowMultipleComponent]

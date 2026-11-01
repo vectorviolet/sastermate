@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     [DisallowMultipleComponent]
     public sealed class TrafficRoute : MonoBehaviour
@@ -9,6 +9,8 @@ namespace FactorySabotage.Gameplay.Traffic
         [SerializeField] private Transform[] waypoints;
         [Tooltip("Connect the last waypoint back to the first only when a complete road loop exists.")]
         [SerializeField] private bool loop;
+        [Tooltip("World-space distance to the right of the road centre line in driving direction. Use 0 for waypoints already placed in a lane.")]
+        [SerializeField, Min(0f)] private float rightLaneOffset;
 
 #if UNITY_EDITOR
         [Header("Scene Gizmos")]
@@ -42,7 +44,7 @@ namespace FactorySabotage.Gameplay.Traffic
                 if (point && (points.Count == 0 || Vector3.Distance(points[points.Count - 1], point.position) > 0.0001f))
                     points.Add(point.position);
             }
-            return new TrafficPath(points.ToArray(), loop);
+            return new TrafficPath(points.ToArray(), loop, rightLaneOffset);
         }
 
 #if UNITY_EDITOR

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Traffic
+namespace Sastermate.Gameplay.Traffic
 {
     /// <summary>Distance-based traversal of a directed lane polyline.</summary>
     internal sealed class TrafficPath
@@ -19,9 +19,9 @@ namespace FactorySabotage.Gameplay.Traffic
         public Vector3 SegmentEnd(int index) => _points[(index + 1) % _points.Length];
         public Vector3 PointPosition(int index) => _points[index];
 
-        public TrafficPath(Vector3[] points, bool loop)
+        public TrafficPath(Vector3[] points, bool loop, float rightOffset = 0f)
         {
-            _points = points ?? Array.Empty<Vector3>();
+            _points = OffsetLane(points ?? Array.Empty<Vector3>(), loop, rightOffset);
             _loop = loop;
             _ends = new float[_points.Length < 2 ? 0 : _points.Length - (loop ? 0 : 1)];
             var length = 0f;
@@ -31,6 +31,33 @@ namespace FactorySabotage.Gameplay.Traffic
                 _ends[i] = length;
             }
             Length = length;
+        }
+
+        private static Vector3[] OffsetLane(Vector3[] points, bool loop, float offset)
+        {
+            if (points.Length < 2 || offset <= 0f) return points;
+            var shifted = new Vector3[points.Length];
+            for (var i = 0; i < points.Length; i++)
+            {
+                var incoming = i > 0 || loop
+                    ? points[i] - points[(i + points.Length - 1) % points.Length] : Vector3.zero;
+                var outgoing = i < points.Length - 1 || loop
+                    ? points[(i + 1) % points.Length] - points[i] : Vector3.zero;
+                incoming.y = outgoing.y = 0f;
+                incoming = incoming.normalized;
+                outgoing = outgoing.normalized;
+                if (incoming.sqrMagnitude < 0.0001f) incoming = outgoing;
+                if (outgoing.sqrMagnitude < 0.0001f) outgoing = incoming;
+                var rightIn = new Vector3(incoming.z, 0f, -incoming.x);
+                var rightOut = new Vector3(outgoing.z, 0f, -outgoing.x);
+                var miter = (rightIn + rightOut).normalized;
+                var alignment = Vector3.Dot(miter, rightOut);
+                // Cap acute corners; a reversing/degenerate waypoint must never create a spike or NaN.
+                var displacement = alignment > 0.001f
+                    ? miter * (offset / Mathf.Max(alignment, 0.5f)) : rightOut * offset;
+                shifted[i] = points[i] + displacement;
+            }
+            return shifted;
         }
 
         public float NormalizeDistance(float distance) => !IsValid ? 0f :

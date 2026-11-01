@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace FactorySabotage.Gameplay.Buildings
+namespace Sastermate.Gameplay.Buildings
 {
-    [CreateAssetMenu(fileName = "HouseModels", menuName = "Climate Guardians/Buildings/Model Catalog")]
+    [CreateAssetMenu(fileName = "HouseModels", menuName = "Sastermate/Buildings/Model Catalog")]
     public sealed class HouseModelCatalog : ScriptableObject
     {
         [Tooltip("Single-mesh FBX models with a MeshFilter and MeshRenderer on their root. Gameplay components stay on BaseHouse.")]

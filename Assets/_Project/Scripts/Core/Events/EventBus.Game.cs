@@ -1,9 +1,9 @@
 using System;
-using FactorySabotage.Gameplay.Fire;
-using FactorySabotage.Gameplay.Tasks;
+using Sastermate.Gameplay.Fire;
+using Sastermate.Gameplay.Tasks;
 using UnityEngine;
 
-namespace FactorySabotage.Core.Events
+namespace Sastermate.Core.Events
 {
     public static partial class EventBus
     {

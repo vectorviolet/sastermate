@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace FactorySabotage.Player
+namespace Sastermate.Player
 {
     /// <summary>A narrow tube following the simulated water; all buffers are allocated once.</summary>
     internal sealed class WaterJetMesh : IDisposable

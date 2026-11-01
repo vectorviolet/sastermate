@@ -1,8 +1,8 @@
 using UnityEngine;
 using VectorViolet.ProMovement;
-using static FactorySabotage.Core.Utilities.HashedAnimatorParameters;
+using static Sastermate.Core.Utilities.HashedAnimatorParameters;
 
-namespace FactorySabotage.Player
+namespace Sastermate.Player
 {
     /// <summary>Connects movement speed and the water hose's spraying state to a 3D Animator.</summary>
     [DisallowMultipleComponent]
