@@ -1,0 +1,18 @@
+HOW TO PLAY
+
+Survive for 3 minutes without the temperature reaching +2 degrees Celsius.
+
+WASD / arrow keys: move
+Mouse: aim the hose
+Left mouse button: spray water
+Q / E: rotate the camera
+Upgrades button: open the upgrade shop
+Close / X: close the upgrade shop
+Escape: close the upgrade shop, or pause/back during gameplay
+
+Extinguish fires to earn Carbon Points (CP). Spend CP on solar panels,
+recycling, and tree planting to slow future warming. You cannot spray
+while the upgrade shop is open. Release and press the mouse again after closing it.
+
+Finish the countdown below +2 degrees to win. Reaching +2 degrees loses.
+Use Play Again on the result screen for a fresh round.
