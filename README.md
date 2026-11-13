@@ -1,6 +1,6 @@
 # Sastermate
 
-A climate-crisis city game made for the COP31 Game Jam (2026). Put out fires, earn Carbon Points and invest in green infrastructure to keep global warming below +2.0°C.
+A climate-crisis city game made for the GameUp game jam (2026), on the COP31 theme. Put out fires, earn Carbon Points and invest in green infrastructure to keep global warming below +2.0°C.
 
 ![Gameplay: a firefighter sprays a burning house while the temperature gauge climbs](Design/gameplay.png)
 
@@ -47,7 +47,11 @@ Design notes for individual systems (carbon points, upgrades, fire difficulty, w
 
 ## Credits
 
-Made by VectorViolet during the jam. Third-party assets: Kenney city and nature kits, SimplePoly City, JMO Cartoon FX and the Fredoka font (SIL Open Font License, notice in `Assets/StreamingAssets/ThirdPartyNotices`).
+Made by VectorViolet for **GameUp**, a game program by HP, the Istanbul International Center for Private Sector in Development (ICPSD) and UNDP. The topic was the COP31 climate conference.
+
+<img src="Design/Splash/credits.png" alt="HP, ICPSD and UNDP logos" width="480">
+
+Third-party assets: Kenney city and nature kits, SimplePoly City, JMO Cartoon FX and the Fredoka font (SIL Open Font License, notice in `Assets/StreamingAssets/ThirdPartyNotices`).
 
 ## License
 
