@@ -4,6 +4,8 @@ A climate-crisis city game made for the COP31 Game Jam (2026). Put out fires, ea
 
 ![Gameplay: a firefighter sprays a burning house while the temperature gauge climbs](Design/gameplay.png)
 
+[**Watch the gameplay video on YouTube**](https://youtu.be/P8GwjszRsIA)
+
 ## About the game
 
 The year is 2026. You are the new COP31 Representative for the city of Nova, and on your first day a fire breaks out. Your job is not only to respond to emergencies but to make Nova resilient. Every fire pushes the global temperature up, and if it reaches +2.0°C the city is lost. Survive three minutes below that line to win.
@@ -25,6 +27,10 @@ The year is 2026. You are the new COP31 Representative for the city of Nova, and
 | Close the shop, pause or go back | Escape |
 
 You cannot spray while the upgrade shop is open.
+
+## Video
+
+[![Watch Sastermate on YouTube](https://img.youtube.com/vi/P8GwjszRsIA/maxresdefault.jpg)](https://youtu.be/P8GwjszRsIA)
 
 ## Screenshots
 
