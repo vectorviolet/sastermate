@@ -4,7 +4,7 @@ A climate-crisis city game made for the GameUp game jam (2026), on the COP31 the
 
 ![Gameplay: a firefighter sprays a burning house while the temperature gauge climbs](Design/gameplay.png)
 
-[**Watch the gameplay video on YouTube**](https://youtu.be/P8GwjszRsIA)
+[**Play on itch.io**](https://umutcanekinci.itch.io/sastermate) · [**Watch the gameplay video**](https://youtu.be/P8GwjszRsIA)
 
 ## About the game
 
@@ -47,9 +47,17 @@ Design notes for individual systems (carbon points, upgrades, fire difficulty, w
 
 ## Credits
 
-Made by VectorViolet for **GameUp**, a game program by HP, the Istanbul International Center for Private Sector in Development (ICPSD) and UNDP. The topic was the COP31 climate conference.
+Made by **Team Climora** for **GameUp**, a game program by HP, the Istanbul International Center for Private Sector in Development (ICPSD) and UNDP. The topic was the COP31 climate conference.
 
 <img src="Design/Splash/credits.png" alt="HP, ICPSD and UNDP logos" width="480">
+
+| Name | Role |
+|---|---|
+| Umutcan Ekinci (VectorViolet) | Development and technical software |
+| İlaysu Nur Nargiz | Graphics and design |
+| Zeynep Aytemiç | Story and scenario |
+| Çağla Padar | Sound and music |
+| Zilan Güngör | Presentation and promotion |
 
 Third-party assets: Kenney city and nature kits, SimplePoly City, JMO Cartoon FX and the Fredoka font (SIL Open Font License, notice in `Assets/StreamingAssets/ThirdPartyNotices`).
 
